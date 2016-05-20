@@ -14,13 +14,11 @@ class submit extends CI_Controller {
 		date_default_timezone_set('America/Sao_Paulo');
 	}
 
-	function logout()
-		{
+	function logout() {
 		/* Model */
 		$this -> load -> model('securities');
-		$this->securities->logout();	
-		}
-		
+		$this -> securities -> logout();
+	}
 
 	function cab($security = 1, $full = 0) {
 		/* Model */
@@ -42,38 +40,141 @@ class submit extends CI_Controller {
 
 		$this -> load -> view('header/header', $data);
 		$this -> load -> view('header/cab', $data);
-		if ($full == 1)
-			{
-				$this -> load -> view('header/content_open_full',null);
-			} else {
-				$this -> load -> view('header/content_open',null);
-			}
-		
+		if ($full == 1) {
+			$this -> load -> view('header/content_open_full', null);
+		} else {
+			$this -> load -> view('header/content_open', null);
+		}
+
 	}
 
 	function index() {
 		redirect(base_url('index.php/main'));
 	}
 
-	function new_project()
-		{
-			$pag = 0;
-			$id = 1;
-			redirect(base_url('index.php/submit/project_edit/'.$id.'/'.checkpost_link($id).'/'.$pag));
+	function new_project() {
+		$pag = 0;
+		$id = 1;
+		redirect(base_url('index.php/submit/project_edit/' . $id . '/' . checkpost_link($id) . '/' . $pag));
+	}
+
+	function project_edit($id = 0, $chk = '', $pag = 0) {
+		$this -> load -> model('geds');
+		$this -> load -> model('teams');
+		$this -> load -> model('projects');
+		$page_link = 'submit/project_edit';
+		/* Page */
+		if ($pag <= 0) {
+			$pag = 1;
 		}
-	
-	function project_edit($id=0,$chk='',$pag=0)
-		{
-			/* Page */
-			if ($pag <= 0)
-				{
-					$pag = 1;
-				}
-			
-			$this->cab();
-			
-			$data['page'] = $pag;
-			$this->load->view('submit/header_project',$data);
+		if ($chk != checkpost_link($id)) {
+			redirect(base_url('index.php/main'));
 		}
+
+		$secu = 1;
+		$full = 1;
+		$this -> cab($secu, $full);
+
+		$data['page'] = $pag;
+		$data['id'] = $id;
+		$data['chk'] = $chk;
+		$data['link'] = $page_link;
+		$data['max_menu'] = 7;
+		//$data['page_enable'] = 1;
+		$this -> load -> view('submit/header_project', $data);
+
+		/* Mount screen */
+		$data['title'] = msg('submit_process');
+
+		$form = new form;
+		$form -> id = $id;
+
+		switch ($pag) {
+			case '1' :
+				$cp = $this -> projects -> cp_01($id);
+				break;
+			case '2' :
+				$cp = $this -> projects -> cp_02($id);
+				break;
+			case '3' :
+				$cp = $this -> projects -> cp_03($id);
+				break;
+			case '4' :
+				$cp = $this -> projects -> cp_04($id);
+				break;
+			case '5' :
+				$cp = $this -> projects -> cp_05($id);
+				break;
+			case '6' :
+				$cp = $this -> projects -> cp_06($id);
+				break;
+			case '7' :
+				$cp = $this -> projects -> cp_07($id);
+				break;
+			default :
+				$cp = array();
+				break;
+		}
+
+		$tabela = 'cep_submit_documento';
+		$data['content'] = $form -> editar($cp, $tabela);
+
+		/* Saved */
+		if ($form -> saved > 0) {
+			$pag++;
+			$link = base_url('index.php/' . $page_link . '/' . $id . '/' . $chk . '/' . $pag);
+			redirect($link);
+		}
+
+		$this -> load -> view('content', $data);
+		
+		$this->load->view("header/content_close",null);
+		$this->load->view("header/footer",null);		
+	}
+
+	function view($id = 0, $chk = '') {
+		$this -> load -> model('ceps');
+		$this -> load -> model('geds');
+		$this -> load -> model('submits');
+		$this -> load -> model('messages');
+		$this -> load -> model('comments');
+		$this -> load -> model('historics');
+
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+		
+		$data = $this->submits->le($id);
+		
+		$data['title'] = '';
+		$data['content'] = $this->load->view('submit/view',$data,true);
+		$this->load->view('content',$data);
+		
+		$data['content'] = '<h3>'.msg('files').'</h3>'.cr();
+		$data['content'] .= $this->geds->file_list($id);
+		$this->load->view('content',$data);
+		
+		$data['content'] = $this->messages->show_messages($id);
+		$data['content'] .= $this->comments->show_messages($id);
+		$data['content'] .= $this->historics->show_historic($id);
+		
+		$data['content'] .= $this->messages->show_messages_list($id);
+		$data['content'] .= $this->comments->show_messages_list($id);
+		$data['content'] .= $this->historics->show_historic_list($id);
+		
+		
+		$this->load->view('content',$data);
+		
+		/* Validate Documents */		
+		if ($data['doc_status'] == 'A')
+			{
+				$data['content'] = $this->ceps->validate_documments($id);
+				$this->load->view('content',$data);				
+			}
+
+		$this->load->view("header/content_close",null);
+		$this->load->view("header/footer",null);		
+	}
+
 }
 ?>

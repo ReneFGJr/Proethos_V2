@@ -44,6 +44,7 @@ if (isset($_SESSION['name']))
       <ul class="nav navbar-nav">
 		<li class="navbar-nav-item"><a href="#"><?php echo msg('home'); ?></a></li>
 		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/main/research');?>"><?php echo msg("research_summary"); ?></a></li>
+		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/main/committee');?>"><?php echo msg("member_committee"); ?></a></li>
 		<li class="navbar-nav-item"><a href="#"><?php echo msg("menu_faq"); ?></a></li>
 		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/admin');?>"><?php echo msg("menu_admin"); ?></a></li>
       </ul>

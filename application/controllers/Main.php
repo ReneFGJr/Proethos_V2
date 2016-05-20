@@ -71,6 +71,69 @@ class main extends CI_Controller {
 			$this->load->view("header/footer",null);
 		}
 
+	function committee()
+		{
+			/* Model */
+			$this->load->model('ceps');
+			$this->load->model('submits');
+			
+			$us = $_SESSION['badge'];
+			
+			$secu = 1;
+			$full = 1;
+			$this->cab($secu,$full);
+			$txt = '';
+			$txt .= '<h1>'.msg('resume_committee').'</h1>'.cr();
+			$data['content'] = $txt;
+			$this->load->view('content',$data);
+			
+			$data['content'] = $this->ceps->resume_committee($us);
+			$this->load->view('content',$data);
+			
+			$txt = '<br><h4>'.msg('find_a_term').'</h4>';
+			$txt .= $this->load->view('committee/search',null,true);
+			$data['content'] = $txt;
+			$this->load->view('content',$data);
+						
+			$txt = '<br><h2>'.msg('secretary_menu').'</h2>';
+			$txt .= $this->load->view('committee/search',null,true);
+			$data['content'] = $txt;
+			$this->load->view('content',$data);
+			
+			$txt = '<br><h2>'.msg('report_menu').'</h2>';
+			$txt .= $this->load->view('committee/search',null,true);
+			$data['content'] = $txt;
+			$this->load->view('content',$data);			
+
+
+			$this->load->view("header/content_close",null);
+			$this->load->view("header/footer",null);
+		}
+
+	function protocols($status='')
+		{
+			/* Model */
+			$this->load->model('ceps');
+			$this->load->model('submits');
+						
+			$secu = 1;
+			$full = 1;
+			$this->cab($secu,$full);
+			
+			if ($status == 'A')
+				{
+					$sx = $this->submits->show_protocols($status);
+				} else {
+					$sx = '';
+				}
+			$data['content'] = $sx;
+			$this->load->view('content',$data);
+			
+			$this->load->view("header/content_close",null);
+			$this->load->view("header/footer",null);		
+			
+		}
+
 	function protocol($id=0,$chk='')
 		{
 			/* Model */
