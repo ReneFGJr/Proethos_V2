@@ -24,6 +24,22 @@ if (isset($_SESSION['name']))
 	.navbar-nav-item:hover {
 		background-color: #CCCCCC;
 	}
+	.navbar
+		{
+			background-color: #1f1f5e;
+			color: #0000ff;	
+		}
+	.navbar-default .navbar-nav > li > a
+		{
+			opacity: 1;
+			color: #ffffff;
+			font-family: "open-sans",Verdana, Geneva, Arial, Helvetica, sans-serif;		
+		}
+	.dropdown > li > a:hover
+		{
+			color: red;
+		}
+		
 </style>
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default">
@@ -42,7 +58,7 @@ if (isset($_SESSION['name']))
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-		<li class="navbar-nav-item"><a href="#"><?php echo msg('home'); ?></a></li>
+		<li class="navbar-nav-item"><a href="#" class="nav-a"><?php echo msg('home'); ?></a></li>
 		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/main/research');?>"><?php echo msg("research_summary"); ?></a></li>
 		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/main/committee');?>"><?php echo msg("member_committee"); ?></a></li>
 		<li class="navbar-nav-item"><a href="#"><?php echo msg("menu_faq"); ?></a></li>
@@ -53,7 +69,7 @@ if (isset($_SESSION['name']))
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $user;?><span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="<?php echo base_url('index.php/main/myaccount');?>"><?php echo msg('myacount');?></a></li>
+            <li><a href="<?php echo base_url('index.php/main/myaccount');?>"><?php echo msg('my_account');?></a></li>
             <li role="separator" class="divider"></li>
             <li><a href="<?php echo base_url('index.php/main/logout');?>"><?php echo msg('logout');?></a></li>
           </ul>

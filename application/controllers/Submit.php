@@ -53,14 +53,34 @@ class submit extends CI_Controller {
 	}
 
 	function new_project() {
+		$this -> load -> model('submits');
+		$ida = $_SESSION['badge'];
+		/* Checa abertos */
+		$tot = $this -> submits -> in_edition($ida);
+
+		if ($tot == 0) {
+			$id = $this -> submits -> create_new_project($ida, 'PRO');
+			redirect(base_url('index.php/submit/project_edit/' . $id . '/' . checkpost_link($id) . '/' . $pag));
+		}
+
 		$pag = 0;
-		$id = 1;
-		redirect(base_url('index.php/submit/project_edit/' . $id . '/' . checkpost_link($id) . '/' . $pag));
+		$secu = 1;
+		$full = 1;
+		$this -> cab($secu, $full);
+		$data = array();
+		$this -> load -> view('submit/new_project', $data);
+
+		//redirect(base_url('index.php/submit/project_edit/' . $id . '/' . checkpost_link($id) . '/' . $pag));
+
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);
 	}
 
 	function project_edit($id = 0, $chk = '', $pag = 0) {
+		$this -> load -> model('ceps');
 		$this -> load -> model('geds');
 		$this -> load -> model('teams');
+		$this -> load -> model('submits');
 		$this -> load -> model('projects');
 		$page_link = 'submit/project_edit';
 		/* Page */
@@ -74,6 +94,17 @@ class submit extends CI_Controller {
 		$secu = 1;
 		$full = 1;
 		$this -> cab($secu, $full);
+
+		/* Leitura */
+		$pj = $this -> submits -> le($id);
+		if ($pj['cep_status'] != '@') {
+			$pj['title'] = '';
+			$pj['content'] = $this -> load -> view('submit/view', $pj, true);
+			$this -> load -> view('content', $pj);
+
+			$this -> load -> view('submit/not_edition', null);
+			return ('');
+		}
 
 		$data['page'] = $pag;
 		$data['id'] = $id;
@@ -111,12 +142,17 @@ class submit extends CI_Controller {
 			case '7' :
 				$cp = $this -> projects -> cp_07($id);
 				break;
+			case '8' :
+				$this -> projects -> finish($id);
+				redirect(base_url('index.php/main/research'));
+				return ('');
+				break;
 			default :
 				$cp = array();
 				break;
 		}
 
-		$tabela = 'cep_submit_documento';
+		$tabela = $this -> projects -> tabela;
 		$data['content'] = $form -> editar($cp, $tabela);
 
 		/* Saved */
@@ -127,9 +163,9 @@ class submit extends CI_Controller {
 		}
 
 		$this -> load -> view('content', $data);
-		
-		$this->load->view("header/content_close",null);
-		$this->load->view("header/footer",null);		
+
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);
 	}
 
 	function view($id = 0, $chk = '') {
@@ -143,37 +179,35 @@ class submit extends CI_Controller {
 		$secu = 1;
 		$full = 0;
 		$this -> cab($secu, $full);
-		
-		$data = $this->submits->le($id);
-		
-		$data['title'] = '';
-		$data['content'] = $this->load->view('submit/view',$data,true);
-		$this->load->view('content',$data);
-		
-		$data['content'] = '<h3>'.msg('files').'</h3>'.cr();
-		$data['content'] .= $this->geds->file_list($id);
-		$this->load->view('content',$data);
-		
-		$data['content'] = $this->messages->show_messages($id);
-		$data['content'] .= $this->comments->show_messages($id);
-		$data['content'] .= $this->historics->show_historic($id);
-		
-		$data['content'] .= $this->messages->show_messages_list($id);
-		$data['content'] .= $this->comments->show_messages_list($id);
-		$data['content'] .= $this->historics->show_historic_list($id);
-		
-		
-		$this->load->view('content',$data);
-		
-		/* Validate Documents */		
-		if ($data['doc_status'] == 'A')
-			{
-				$data['content'] = $this->ceps->validate_documments($id);
-				$this->load->view('content',$data);				
-			}
 
-		$this->load->view("header/content_close",null);
-		$this->load->view("header/footer",null);		
+		$data = $this -> submits -> le($id);
+
+		$data['title'] = '';
+		$data['content'] = $this -> load -> view('submit/view', $data, true);
+		$this -> load -> view('content', $data);
+
+		$data['content'] = '<h3>' . msg('files') . '</h3>' . cr();
+		$data['content'] .= $this -> geds -> file_list($id);
+		$this -> load -> view('content', $data);
+
+		$data['content'] = $this -> messages -> show_messages($id);
+		$data['content'] .= $this -> comments -> show_messages($id);
+		$data['content'] .= $this -> historics -> show_historic($id);
+
+		$data['content'] .= $this -> messages -> show_messages_list($id);
+		$data['content'] .= $this -> comments -> show_messages_list($id);
+		$data['content'] .= $this -> historics -> show_historic_list($id);
+
+		$this -> load -> view('content', $data);
+
+		/* Validate Documents */
+		if ($data['cep_status'] == 'A') {
+			$data['content'] = $this -> ceps -> validate_documments($id);
+			$this -> load -> view('content', $data);
+		}
+
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);
 	}
 
 }

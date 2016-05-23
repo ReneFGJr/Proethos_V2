@@ -1,17 +1,17 @@
-$("#bt003").click(function() {
+$("#bt002").click(function() {
 	$("#pannel").hide();
-	$("#ac003").slideToggle("slow", function() {
+	$("#ac002").slideToggle("slow", function() {
 	});
 });
 
 /* Submit */
-$("#bt003a").click(function() {
-	var $text = $("#bt003t").val();
-	var $proto = $("#proto3").val();
-	var $check = $("#check3").val();
-	var $link = $("#link3").val();
+$("#bt002a").click(function() {
+	var $text = $("#bt002t").val();
+	var $proto = $("#proto2").val();
+	var $check = $("#check2").val();
+	var $link = $("#link2").val();
 	
-	$("#ac003").hide("slow");
+	$("#ac002").hide("slow");
 	$("#pannel").fadeIn("slow");
 	$("#pannel").html('wait...');
 
@@ -29,7 +29,7 @@ $("#bt003a").click(function() {
 });
 
 /* Cancel */
-$("#bt003c").click(function() {
-	$("#ac003").hide("slow");
+$("#bt002c").click(function() {
+	$("#ac002").hide("slow");
 	$("#pannel").fadeIn("slow");
 });

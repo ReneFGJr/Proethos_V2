@@ -1683,13 +1683,14 @@ if (!function_exists('form_edit')) {
 				$row -> $fld = $vlr;
 			}
 			if (substr($tp, 0, 2) == '$N') {
-				$fld = $cp[$r][1];
+				$fld = trim($cp[$r][1]);
+				echo '===>'.$vlr;
 				if (strlen($fld) > 0) {
 					$row -> $fld = number_format($row -> $fld, 2, ',', '.');
 				}
 			}
 			if (substr($tp, 0, 2) == '$I') {
-				$fld = $cp[$r][1];
+				$fld = trim($cp[$r][1]);
 				if (strlen($fld) > 0) {
 					$row -> $fld = number_format($row -> $fld, 0, ',', '.');
 				}
@@ -2363,11 +2364,19 @@ if (!function_exists('form_edit')) {
 
 			/* Password */
 			case 'P' :
+				/* TR da tabela */
+				$tela .= $tr;
+								
+				/* label */
 				if (strlen($label) > 0) {
-					$tela .= $label . ' ';
+					$tela .= $tdl . $label . ' ';
 				}
+				if ($required == 1) { $tela .= ' <font color="red">*</font> ';
+				}
+								
 				$dados = array('name' => $dn, 'id' => $dn, 'value' => $vlr, 'maxlenght' => $max, 'size' => $size, 'class'=>'form_string ');
-				$tela .= form_password($dados);
+				$tela .= $td.form_password($dados);
+				$tela .= $tdn . $trn;
 				break;
 
 			/* String */

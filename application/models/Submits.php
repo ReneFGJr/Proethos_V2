@@ -1,13 +1,13 @@
 <?php
 class submits extends CI_Model {
-	var $tabela = 'cep_submit_documento';
+	var $tabela = 'cep_protocolos';
 	
 	function le($id=0)
 		{
 		$sql = "select * from " . $this -> tabela . "
-					left join usuario on doc_autor_principal = us_codigo
-					left join (select count(*) as comments, cepc_codigo from cep_comment group by cepc_codigo) as comments on cepc_codigo = doc_protocolo
-					where id_doc = ".$id;
+					left join usuario on cep_pesquisador = us_codigo
+					left join (select count(*) as comments, cepc_codigo from cep_comment group by cepc_codigo) as comments on cepc_codigo = cep_protocol
+					where id_cep = ".round($id);
 		$rlt = $this -> db -> query($sql);
 		$rlt = $rlt -> result_array();
 		if (count($rlt) > 0)
@@ -20,11 +20,57 @@ class submits extends CI_Model {
 				return($line);
 			}			 
 		}
+	function in_edition($ida='')
+		{
+			$sql = "select count(*) as total from ".$this->tabela." where cep_pesquisador = '$ida' and cep_status = '@' ";
+			$rlt = $this->db->query($sql);
+			$rlt = $rlt->result_array();
+			$tot = 0;
+			if (count($rlt) > 0)
+				{
+					$line = $rlt[0];
+					$tot = $line['total'];
+				}
+			return($tot);			
+		}
+		
+	function create_new_project($ida='',$tipo='')
+		{
+			$data = date("Ymd");
+			$hora = date("H:i:s");
+			
+			/* valide */
+			$xsql = "select * from ".$this->tabela." where cep_tipo = '$tipo' and cep_pesquisador = '$ida' and cep_data = '$data' and cep_hora = '$hora' ";
+			$rlt = $this->db->query($xsql);
+			$rlt = $rlt->result_array();
+			if (count($rlt) == 0)
+			{
+				$sql = "insert into ".$this->tabela."
+							(
+							cep_tipo, cep_versao, cep_data, cep_hora,
+							cep_pesquisador, cep_status, cep_atualizado, cep_codigo
+							)
+							values
+							(
+							'$tipo','1','$data','$hora',
+							'$ida','@','$data',''
+							)";
+				$rlt = $this->db->query($sql);
+				
+				$sql = "update ".$this->tabela." set cep_codigo = lpad(id_cep,7,0) where cep_codigo = '' ";
+				$rlt = $this->db->query($sql);
+				
+				$xsql = "select * from ".$this->tabela." where cep_tipo = '$tipo' and cep_pesquisador = '$ida' and cep_data = '$data' and cep_hora = '$hora' ";
+				$rlt = $this->db->query($xsql);
+				$rlt = $rlt->result_array();
+			}
+			$id = $line['id_cep'];
+		}
 	function show_protocols($status = '') {
 		$sql = "select * from " . $this -> tabela . "
-					left join usuario on doc_autor_principal = us_codigo
-					left join (select count(*) as comments, cepc_codigo from cep_comment group by cepc_codigo) as comments on cepc_codigo = doc_protocolo
-					where doc_status = 'A' ";
+					left join usuario on cep_pesquisador = us_codigo
+					left join (select count(*) as comments, cepc_codigo from cep_comment group by cepc_codigo) as comments on cepc_codigo = cep_protocol
+					where cep_status = '$status' ";
 		$rlt = $this -> db -> query($sql);
 		$rlt = $rlt -> result_array();
 
@@ -34,16 +80,16 @@ class submits extends CI_Model {
 		$sx .= '<table width="100%" class="table lt2">';
 		for ($r = 0; $r < count($rlt); $r++) {
 			$line = $rlt[$r];
-			$link = '<a href="' . base_url('index.php/submit/view/' . $line['id_doc'] . '/' . checkpost_link($line['id_doc'])) . '" class="lt3">';
+			$link = '<a href="' . base_url('index.php/submit/view/' . $line['id_cep'] . '/' . checkpost_link($line['id_cep'])) . '" class="lt3">';
 			$tot++;
 			$sx .= '<tr>';
 			$sx .= '<td width="2%" align="center">';
 			$sx .= $tot;
 			$sx .= '</td>';
 			$sx .= '<td>';
-			$sx .= $link . $line['doc_1_titulo'] . '</a>';
+			$sx .= $link . $line['cep_titulo'] . '</a>';
 			$sx .= '<br><font class="lt1"><i>' . $line['us_nome'] . '</i></font>';
-			$sx .= '<br><font class="lt0">' . msg('update') . ': ' . stodbr($line['doc_dt_atualizado']) . '</font>';
+			$sx .= '<br><font class="lt0">' . msg('update') . ': ' . stodbr($line['cep_atualizado']) . '</font>';
 			$sx .= ' - ';
 			$sx .= '<font class="lt0">' . round($line['comments']) . ' ' . msg('comment') . '</fonts>';
 			$sx .= '</td>';
@@ -62,13 +108,14 @@ class submits extends CI_Model {
 	function resume_investigator($id = 0) {
 		$author = $_SESSION['badge'];
 		$sql = "select * from " . $this -> tabela . " 
-						where doc_autor_principal = '$author' 
+						where cep_pesquisador = '$author' 
 						";
 		$rlt = $this -> db -> query($sql);
 		$rlt = $rlt -> result_array();
 		$sx = '<table width="100%" class="table">';
 		$sx .= '<tr class="lt1">
 						<th width="80%">' . msg('title') . '</th>
+						<th width="5%">' . msg('type') . '</th>
 						<th align="center" width="5%">' . msg('update') . '</th>
 						<th width="5%"></th>
 					</tr>';
@@ -76,10 +123,11 @@ class submits extends CI_Model {
 		for ($r = 0; $r < count($rlt); $r++) {
 			$line = $rlt[$r];
 			$pag = 1;
-			$link = '<a href="' . base_url('index.php/submit/project_edit/' . $line['id_doc'] . '/' . checkpost_link($line['id_doc']) . '/' . $pag) . '" class="link">';
+			$link = '<a href="' . base_url('index.php/submit/project_edit/' . $line['id_cep'] . '/' . checkpost_link($line['id_cep']) . '/' . $pag) . '" class="link">';
 			$sx .= '<tr>';
-			$sx .= '<td>' . $line['doc_1_titulo'] . '</td>';
-			$sx .= '<td align="center">' . stodbr($line['doc_dt_atualizado']) . '</td>';
+			$sx .= '<td>' . $line['cep_titulo'] . '</td>';
+			$sx .= '<td>' . $line['cep_tipo'] . '</td>';
+			$sx .= '<td align="center">' . stodbr($line['cep_atualizado']) . '</td>';
 			$btn = '<button type="button" class="btn btn-default">' . msg('edit') . '</button>';
 			$btn = '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>';
 			$sx .= '<td align="center" width="20">' . $link . $btn . '</a></td>';
@@ -87,6 +135,17 @@ class submits extends CI_Model {
 		$sx .= '</table>';
 		return ($sx);
 	}
+	
+	function change_status($id=0,$status='')
+		{
+			$data = date("Ymd");
+			$sql = "update ".$this->tabela." set 
+						cep_status = '$status',
+						cep_atualizado = '$data' 
+					where id_cep = ".round($id);
+			$rlt = $this->db->query($sql);
+			return(1);
+		}
 
 }
 ?>
