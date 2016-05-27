@@ -19,6 +19,9 @@ if (isset($_SESSION['name']))
 	} else {
 		$user = '';
 	}
+	
+$admin = 0;
+
 ?>
 <style>
 	.navbar-nav-item:hover {
@@ -47,7 +50,7 @@ if (isset($_SESSION['name']))
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
+        <span class="sr-only">ProEthos</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -58,13 +61,25 @@ if (isset($_SESSION['name']))
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-		<li class="navbar-nav-item"><a href="#" class="nav-a"><?php echo msg('home'); ?></a></li>
-		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/main/research');?>"><?php echo msg("research_summary"); ?></a></li>
-		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/main/committee');?>"><?php echo msg("member_committee"); ?></a></li>
-		<li class="navbar-nav-item"><a href="#"><?php echo msg("menu_faq"); ?></a></li>
-		<li class="navbar-nav-item"><a href="<?php echo base_url('index.php/admin');?>"><?php echo msg("menu_admin"); ?></a></li>
+      	<?php 
+      	if (strlen($user) > 0)
+			{
+				echo '<li class="navbar-nav-item"><a href="#" class="nav-a">'.msg('home').'</a></li>'.cr();
+				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/main/research').'">'.msg("research_summary").'</a></li>'.cr();
+				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/main/committee').'">'.msg("member_committee").'</a></li>'.cr();
+			} 
+		echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/publicc/faq').'">'.msg("menu_faq").'</a></li>'.cr();
+		echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/publicc/documents').'">'.msg("menu_documents").'</a></li>'.cr();
+		echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/publicc/contact').'">'.msg("contact").'</a></li>'.cr();
+		
+      	if ($admin == 1)
+			{				
+				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/admin').'">msg("menu_admin"); ?></a></li>'.cr();
+
+			} ?>
       </ul>
 
+   	<?php if (strlen($user) > 0) { ?>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $user;?><span class="caret"></span></a>
@@ -75,6 +90,7 @@ if (isset($_SESSION['name']))
           </ul>
         </li>
       </ul>
+      <?php } ?>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
