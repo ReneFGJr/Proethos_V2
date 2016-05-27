@@ -319,6 +319,25 @@ class main extends CI_Controller {
 				redirect(base_url('index.php/main/myaccount'));
 				return('');
 			}
+
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);			
 	}
+	function members_committee()
+		{
+		/* Model */
+		$this -> load -> model('committees');
+
+		$secu = 1;
+		$full = 1;
+		$this -> cab($secu, $full);
+		
+		$data['content'] = $this->committees->member_committee_list();
+		$data['title'] = msg('members_committee');
+		$this->load->view('content',$data);
+
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);
+		}
 }
 ?>

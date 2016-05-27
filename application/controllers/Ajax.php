@@ -15,12 +15,12 @@ class ajax extends CI_controller {
 		date_default_timezone_set('America/Sao_Paulo');
 	}
 
-	function action($ac = '', $chk = '') {
+	function action($ac = '', $chk = '', $id = '', $comment = '') {
 		$id = get("proto");
 		$chk = get("check");
 		if (strlen($id) == 0) { $id = "78";
 		}
-		echo "========>".$ac;
+		echo "========>" . $ac;
 		switch ($ac) {
 			/* Return to edit */
 			case '002' :
@@ -35,12 +35,12 @@ class ajax extends CI_controller {
 				$data = array('proto' => $id, 'comment' => $descript, 'cod' => '002', 'caae' => '');
 				$this -> historics -> insert_historic($data);
 				$op = $comment;
-				
+
 				$this -> submits -> change_status($id, '@');
 				$this -> load -> view('successful', $data);
 
 				return ('');
-				break;			
+				break;
 			/* recused */
 			case '003' :
 				$this -> load -> model('submits');
@@ -70,31 +70,50 @@ class ajax extends CI_controller {
 				break;
 			/* recused */
 			case '009' :
+				$this -> load -> model('ceps');
 				$this -> load -> model('submits');
 				$this -> load -> model('messages');
 				$this -> load -> model('historics');
 
-				$comment = get("comment");
+				$comment = get("comment") . $comment;
 				$descript = '';
 
 				/* Insert Historic */
 				$data = array('proto' => $id, 'comment' => $descript, 'cod' => '009', 'caae' => '');
 				$this -> historics -> insert_historic($data);
 				$op = $comment;
-				
+
 				/* Change Status */
 				switch ($op) {
 					case '1' :
 						/* Disptar e-mail para membros */
 						/*******************************/
 						/*******************************/
-						$this -> submits -> change_status($id, 'D');
+						$this -> ceps -> niec_set($id);
+						$this -> submits -> change_status($id, 'B');
+
+						/* Insert Historic */
+						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '010', 'caae' => '');
+						$this -> historics -> insert_historic($data);
+						$op = $comment;
+
 						break;
 					case '2' :
+						/* SURVEY */
+						$this -> ceps -> survey_members($id);
+
+						$this -> ceps -> niec_set($id);
 						$this -> submits -> change_status($id, 'E');
+
+						/* Insert Historic */
+						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '011', 'caae' => '');
+						$this -> historics -> insert_historic($data);
+
+						break;
+					default :
 						break;
 				}
-				
+
 				$data['return'] = base_url('index.php/main/protocols/A');
 				$this -> load -> view('successful', $data);
 
@@ -120,12 +139,12 @@ class ajax extends CI_controller {
 				$data = array('proto' => $id, 'comment' => $descript, 'cod' => '999', 'caae' => '');
 				$this -> historics -> insert_historic($data);
 				$op = $comment;
-				
+
 				$this -> submits -> change_status($id, 'X');
 				$this -> load -> view('successful', $data);
 
 				return ('');
-				break;				
+				break;
 		}
 
 	}

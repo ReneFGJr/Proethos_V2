@@ -3,10 +3,10 @@
 				<?php echo msg("caae"); ?>
 				<br>
 				<span class="lt4">
-					<b><?php echo $cep_protocol; ?></b>
+					<b><?php echo $cep_caae; ?></b>&nbsp;
 				</span>
 			</div>
-			<div class="col-md-6 text-right"><?php echo $cep_tipo; ?></div>
+			<div class="col-md-6 text-right"><?php echo $cep_tipo; ?>&nbsp;</div>
 </div>
 
 <div class="row borderb1" style="font-size: 11px;">

@@ -205,6 +205,12 @@ class submit extends CI_Controller {
 			$data['content'] = $this -> ceps -> validate_documments($id);
 			$this -> load -> view('content', $data);
 		}
+		
+		/* Atribute */
+		if ($data['cep_status'] == 'D') {
+			$data['content'] = $this -> ceps -> meeting_documments($id);
+			$this -> load -> view('content', $data);
+		}		
 
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);

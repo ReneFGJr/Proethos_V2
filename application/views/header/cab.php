@@ -25,7 +25,7 @@ $admin = 0;
 ?>
 <style>
 	.navbar-nav-item:hover {
-		background-color: #CCCCCC;
+		background-color: #5f5f8e;
 	}
 	.navbar
 		{
@@ -36,11 +36,11 @@ $admin = 0;
 		{
 			opacity: 1;
 			color: #ffffff;
-			font-family: "open-sans",Verdana, Geneva, Arial, Helvetica, sans-serif;		
+			font-family: "Roboto", Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;		
 		}
-	.dropdown > li > a:hover
+	.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus
 		{
-			color: red;
+			color: #ffffff;
 		}
 		
 </style>

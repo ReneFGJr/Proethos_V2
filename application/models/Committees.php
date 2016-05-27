@@ -1,18 +1,17 @@
 <?php
-// This file is part of the ProEthos Software. 
-// 
+// This file is part of the ProEthos Software.
+//
 // Copyright 2013, PAHO. All rights reserved. You can redistribute it and/or modify
 // ProEthos under the terms of the ProEthos License as published by PAHO, which
-// restricts commercial use of the Software. 
-// 
+// restricts commercial use of the Software.
+//
 // ProEthos is distributed in the hope that it will be useful, but WITHOUT ANY
 // WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-// PARTICULAR PURPOSE. See the ProEthos License for more details. 
-// 
+// PARTICULAR PURPOSE. See the ProEthos License for more details.
+//
 // You should have received a copy of the ProEthos License along with the ProEthos
 // Software. If not, see
 // https://raw.githubusercontent.com/bireme/proethos/master/LICENSE.txt
-
 
 /**
  * @author Rene Faustino Gabriel Junior <renefgj@gmail.com> (Analista-Desenvolvedor)
@@ -22,9 +21,13 @@
  * @package Class
  * @subpackage Committee
  */
- 
+
 class committees extends CI_model {
 	var $tabela = '_committee';
+	var $tabela_perfil = 'usuario_perfil';
+	var $tabela_perfil_ativo = 'usuario_perfis_ativo';
+	var $tabela_usuario = 'usuario';
+	
 	function cp() {
 		global $dd;
 		$cp = array();
@@ -84,6 +87,62 @@ class committees extends CI_model {
 		array_push($cp, array('$B8', '', msg('update'), False, True));
 
 		return ($cp);
+	}
+
+	function member_committee_list() {
+		$field_sort = 'usp_descricao';
+		$sx = '';
+		$sh = '<TR class="lt0">
+						<Th align="left">' . msg('perfil_user_name') . '</th>
+						<TH>' . msg('assigned data') . '</TH>
+			';
+
+		$sql = "select * from " . $this -> tabela_perfil_ativo . "
+					inner join " . $this -> tabela_perfil . " on up_perfil = usp_codigo
+					inner join " . $this -> tabela_usuario . " on up_usuario = us_codigo
+					where up_ativo = 1 
+					order by $field_sort ";
+		$rlt = db_query($sql);
+
+		$sx .= '<table width="100%" class="tabela">';
+
+		$xhead = '';
+		$tot1 = 0;
+		$tot2 = 0;
+		while ($line = db_read($rlt)) {
+			$head = trim($line[$field_sort]);
+			$perfil = trim($line['usp_descricao']);
+			$name = trim($line['us_nome']);
+
+			/* */
+			if ($head != $xhead) {
+				$sx .= '<TR><TD colspan=5 class="lt3">';
+				if ($tot2 > 0) { $sx .= '<HR width="50%">';
+				}
+				$sx .= $head;
+				$sx .= '</td></tr>';
+				$sx .= $sh;
+				$xhead = $head;
+				$tot2 = 0;
+			}
+
+			$tot1++;
+			$tot2++;
+
+			$sx .= '<TR>';
+
+			$sx .= '<TD>';
+			$sx .= $name;
+			$sx .= '</td>';
+
+			$sx .= '<TD width="80" align="center">';
+			$sx .= stodbr($line['up_data']);
+			$sx .= '</td>';
+
+			$sx .= '</tr>';
+		}
+		$sx .= '</table>';
+		return ($sx);
 	}
 
 }

@@ -161,6 +161,82 @@ class admin extends CI_Controller {
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);	
 		}
+	
+	function assign_to_user_profile()
+		{
+		$this -> load -> model('users');
+		$this -> load -> model('messages');
+		
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+		
+		$sx = $this->users->perfil_atribui_form();
+		
+		//$perfil->set($dd[1]);
+		
+		//echo $perfil->display();		
+		
+		$data['content'] = $sx;
+		$data['title'] = msg('assign_to_user_profile');
+		$this->load->view('content',$data);
+		
+		$id = get("dd1");
+		if (strlen($id) > 0)
+			{
+				$data['title'] = '';
+				$data['content'] = $this->users->perfil_show($id);
+				$this->load->view('content',$data);
+			}
+		
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);
+		}
 
+	function user() {
+		$this -> load -> model('users');
+		$secu = 1;
+		$full = 1;
+		$this -> cab($secu, $full);
+		
+		$form = new form;
+		$form->edit = true;
+		$form->novo = true;
+		$form->row_edit = base_url('index.php/admin/user_ed');
+		$form->row = base_url('index.php/admin/user');
+		$form->tabela = 'usuario';
+		$this->users->row($form);
+		$data['content'] = row($form);
+		$data['title'] = msg('user');
+		$this->load->view('content',$data);
+		
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);			
+	}
+	
+	function user_ed($id=0,$chk='')
+		{
+		$this -> load -> model('users');
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+		
+		$form = new form;
+		$form->id = $id;
+		$tabela = 'usuario';
+		$cp = $this->users->cp_admin();
+		$data['content'] = $form->editar($cp,$tabela);
+		$data['title'] = msg('users');
+		$this->load->view('content',$data);
+		
+		if ($form->saved > 0)
+			{
+				redirect(base_url('index.php/admin/user'));
+				return('');
+			}		
+		
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);	
+		}
 }
 ?>
