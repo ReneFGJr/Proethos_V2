@@ -1,4 +1,5 @@
 <?php
+
 class publicc extends CI_Controller {
 	function __construct() {
 		parent::__construct();
@@ -13,7 +14,6 @@ class publicc extends CI_Controller {
 
 		date_default_timezone_set('America/Sao_Paulo');
 	}
-
 	function cab($security = 0, $full = 0) {
 		/* Model */
 		$this -> load -> model('securities');
@@ -24,9 +24,7 @@ class publicc extends CI_Controller {
 		/* Carrega classes adicionais */
 		$css = array();
 		$js = array();
-		array_push($css, 'bootstrap.css');
 		array_push($css, 'form_sisdoc.css');
-		array_push($js, 'bootstrap.js');
 
 		/* transfere para variavel do codeigniter */
 		$data['css'] = $css;
@@ -48,27 +46,45 @@ class publicc extends CI_Controller {
 	}
 	function documents()
 		{
+		$this->load->model('documments');
+					
 		$this -> cab();
 		$data['menus'] = array('home' => '#', msg('menu_documents') => 'documents');
-		$this -> load -> view('header/breadcrumbs', $data);
+		$this -> load -> view('committee/documents', null);
+		
+		$data['content'] = $this->documments->show();
+		$this->load->view('content',$data);		
 		
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);			
 		}
 	function faq()
 		{
-		$this -> cab();
+		$this->load->model('faqs');
+		
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+		
 		$data['menus'] = array('home' => '#', msg('menu_faq') => 'faq');
 		$this -> load -> view('header/breadcrumbs', $data);
 		
 		$this -> load -> view("header/content_close", null);
+		
+		$data['content'] = $this->faqs->show();
+		$this->load->view('content',$data);
+		
+		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);			
 		}
+		
 	function contact()
 		{
 		$this -> cab();
 		$data['menus'] = array('home' => '#', msg('contact') => 'contact');
 		$this -> load -> view('header/breadcrumbs', $data);
+		
+		$this->load->view('committee/contact',null);
 		
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);		

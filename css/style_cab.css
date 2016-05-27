@@ -61,7 +61,7 @@
 	color: #FFFFFF;
 }
 #titu2 {
-	font-family: RobotoThin, CICPG, Arial, Helvetica, sans-serif;
+	font-family: RobotoThin, Arial, Helvetica, sans-serif;
 	position: fixed;
 	top: -30px;
 	font-size: 16px;
@@ -136,7 +136,7 @@
 /* Tools */
 #cabecalho_user_menu {
 	color: #fff;
-	font-family: 'CICPG', 'Roboto', sans-serif, arial;
+	font-family:  'Roboto', sans-serif, arial;
 	font-size: 12px;
 	float: right;
 	padding: 4px;
@@ -145,7 +145,7 @@
 #cabecalho_user_menu ul li {
 	text-align: right;
 	color: #fff;
-	font-family: 'CICPG', 'Roboto', sans-serif, arial;
+	font-family: 'Roboto', sans-serif, arial;
 	font-size: 12px;
 	float: right;
 	padding: 4px;

@@ -24,9 +24,7 @@ class main extends CI_Controller {
 		/* Carrega classes adicionais */
 		$css = array();
 		$js = array();
-		array_push($css, 'bootstrap.css');
 		array_push($css, 'form_sisdoc.css');
-		array_push($js, 'bootstrap.js');
 
 		/* transfere para variavel do codeigniter */
 		$data['css'] = $css;
@@ -163,12 +161,12 @@ class main extends CI_Controller {
 		$this -> load -> view('content', $data);
 
 		$txt = '<br><h2>' . msg('secretary_menu') . '</h2>';
-		$txt .= $this -> load -> view('committee/search', null, true);
+		$txt .= $this -> load -> view('committee/secretary_menu', null, true);
 		$data['content'] = $txt;
 		$this -> load -> view('content', $data);
 
 		$txt = '<br><h2>' . msg('report_menu') . '</h2>';
-		$txt .= $this -> load -> view('committee/search', null, true);
+		$txt .= $this -> load -> view('committee/report_menu', null, true);
 		$data['content'] = $txt;
 		$this -> load -> view('content', $data);
 
@@ -190,6 +188,12 @@ class main extends CI_Controller {
 			case 'A':
 				$sx = $this -> submits -> show_protocols($status);
 				break;
+			case 'B':
+				$sx = $this -> submits -> show_protocols($status);
+				break;
+			case 'C':
+				$sx = $this -> submits -> show_protocols($status);
+				break;								
 			case 'D':
 				$sx = $this -> submits -> show_protocols($status);
 				break;				

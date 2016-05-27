@@ -13,6 +13,8 @@ class messages extends CI_Model {
 	var $testmode_email = 'renefgj@gmail.com';
 
 	function __construct() {
+		global $email_from, $email_from_name, $email_smtp, $email_pass, $email_user, $email_auth, $email_debug, $email_replay, $email_sign;
+				
 		$sql = "select * from _committee limit 1";
 		$rlt = $this -> db -> query($sql);
 		$rlt = $rlt -> result_array();
@@ -24,6 +26,16 @@ class messages extends CI_Model {
 			$this -> smtp_user = $line['cm_admin_email'];
 			$this -> smtp_pass = $line['cm_admin_email_pass'];
 			$this -> smtp_type = $line['cm_admin_email_tipo'];
+			
+			$email_from = $line['cm_admin_email'];
+			$email_from_name = $line['cm_admin_name'];
+			$email_smtp  = $line['cm_admin_email_smtp'];
+			$email_pass  =  $line['cm_admin_email_pass'];
+			$email_user  = $line['cm_admin_email'];
+			$email_auth  =  $line['cm_admin_email_tipo'];
+			$email_debug  = True;
+			$email_repla = $line['cm_email_replay'];
+			
 
 			$cm_site = trim($line['cm_site']);
 			$link = '';
@@ -37,6 +49,8 @@ class messages extends CI_Model {
 			if (strlen($line['cm_phone']) > 0) { $this -> sign .= msg('phone') . ': ' . $line['cm_phone'] . '<br>';
 			}
 			$this -> sign .= '' . $line['cm_city'] . ' - ' . $line['cm_country'] . '<br>';
+			
+			$email_sign = '<br><br>'.$this->sign;
 		}
 		return ('');
 	}
@@ -183,6 +197,8 @@ class messages extends CI_Model {
 			}
 			if (isset($data['us_nome'])) { $msg['nw_descricao'] = troca($msg['nw_descricao'], '$name', $data['us_nome']);
 			}
+			$msg['nw_descricao'] = troca($msg['nw_descricao'],chr(13),'<br>');
+			$msg['nw_descricao'] = troca($msg['nw_descricao'],chr(10),'');
 			return ($msg);
 		} else {
 			return ( array());
@@ -193,9 +209,10 @@ class messages extends CI_Model {
 		$subject = $messa['nw_titulo'];
 		$content = $messa['nw_descricao'];
 
-		$sql = "select * from usuario where us_codigo = '$id' ";
+		$sql = "select * from usuario where id_us = " . round($id);
 		$rlt = $this -> db -> query($sql);
 		$rlt = $rlt -> result_array();
+		$erro = msg('not_send');
 		if (count($rlt) > 0) {
 			$line = $rlt[0];
 
@@ -207,42 +224,11 @@ class messages extends CI_Model {
 			}
 			if (strlen($email_2) > 0) { array_push($to, $email_2);
 			}
-			$ok = $this -> messages -> sendmail($to, $subject, $content);
+			//$ok = $this -> messages -> sendmail($to, $subject, $content);
+			$erro = enviaremail($to[0],$subject,$content,'');
 		}
+		return ($erro);
 
-	}
-
-	function sendmail($to, $subject, $content) {
-
-		$config = Array('protocol' => 'smtp', 'smtp_host' => $this -> smtp, 'smtp_port' => $this -> smtp_port, 'smtp_user' => $this -> smtp_user, 'smtp_pass' => $this -> smtp_pass, 'mailtype' => 'html', 'charset' => 'utf-8', 'wordwrap' => TRUE, 'validate'=>True);
-		$this -> load -> library('email', $config);
-		$this -> email -> from($this -> smtp_user, $this -> email_name);
-		
-		if ($this -> testmode == 1) {
-			$this -> email -> to($this -> testmode_email);
-		} else {
-			if (is_array($to)) {
-				for ($r = 0; $r < count($to); $r++) {
-					if ($r == 0) {
-						$this -> email -> to($to[$r]);
-					} else {
-						$this -> email -> bcc($to[$r]);
-					}
-				}
-			} else {
-				$this -> email -> to($to);
-			}
-
-		}
-
-		//$this -> email -> cc('another@another-example.com');
-		//$this -> email -> bcc('them@their-example.com');
-		$this -> email -> reply_to($this -> email_reply);
-		$this -> email -> subject($subject);
-		$this -> email -> message($content);
-		$this -> email -> send();
-
-		//echo $this -> email -> print_debugger();
 	}
 
 	function validaemail($email) {

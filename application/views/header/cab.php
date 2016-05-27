@@ -20,7 +20,12 @@ if (isset($_SESSION['name']))
 		$user = '';
 	}
 	
+/******* Perfil de administrador */
 $admin = 0;
+if ($this->securities->perfil("#ADM"))
+	{
+		$admin = 1;
+	}
 
 ?>
 <style>
@@ -32,11 +37,12 @@ $admin = 0;
 			background-color: #1f1f5e;
 			color: #0000ff;	
 		}
-	.navbar-default .navbar-nav > li > a
+	.navbar-default .navbar-nav > li > a, .dropdown
 		{
 			opacity: 1;
 			color: #ffffff;
-			font-family: "Roboto", Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;		
+			font-family: "Yanone Kaffeesatz", "RobotoThin", Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;
+			font-size: 20px;		
 		}
 	.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus
 		{
@@ -74,8 +80,7 @@ $admin = 0;
 		
       	if ($admin == 1)
 			{				
-				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/admin').'">msg("menu_admin"); ?></a></li>'.cr();
-
+				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/admin').'">'.msg("menu_admin").'</a></li>'.cr();
 			} ?>
       </ul>
 

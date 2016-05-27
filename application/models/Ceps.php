@@ -442,6 +442,38 @@ class ceps extends CI_Model {
 		
 		return(1);
 	}
+	
+	function survey_members($id)
+		{
+			$data = array();
+			$messa = $this->messages->recover('survey_email',$data);
+			
+			$sql = "select * from usuario where us_perfil like '%#MEM%' and us_ativo = 1";
+			$rlt = $this->db->query($sql);
+			$rlt = $rlt->result_array();
+			$sx = '<table class="table lt2" width="100%">';
+			$sx .= '<tr><th>'.msg('member').'</th><th>'.msg('email').'</th><th>'.msg('status').'</th></tr>'.cr();
+			$tot = 0;
+			$proto = '';
+			for ($r=0;$r < count($rlt);$r++)
+				{
+					$line = $rlt[$r];
+					$tot++;
+					$status = msg('send_mail');
+					$id_us = $line['id_us'];
+					$sx .= '<tr>';
+					$sx .= '<td>'.$line['us_nome'].'</td>';
+					$sx .= '<td>'.$line['us_email'].'</td>';
+					
+					
+					$ok = $this->messages->email_to_user($id_us, $messa, $proto);
+					$sx .= '<td class="alert alert-success">'.$ok.'</td>';
+					
+				}
+			$sx .= '<tr><td>'.msg('sent_to').' '.$tot.' '.msg('members').'</td></tr>'.cr();
+			$sx .= '</table>';
+			return($sx);
+		}
 
 }
 ?>

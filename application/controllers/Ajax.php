@@ -9,8 +9,9 @@ class ajax extends CI_controller {
 		$this -> load -> helper('form');
 		$this -> load -> helper('form_sisdoc');
 		$this -> load -> helper('url');
+		$this -> load -> helper('email');
 		$this -> load -> library('session');
-		$this -> load -> library('email');
+		//$this -> load -> library('sisdoc_email_autho');
 
 		date_default_timezone_set('America/Sao_Paulo');
 	}
@@ -78,36 +79,38 @@ class ajax extends CI_controller {
 				$comment = get("comment") . $comment;
 				$descript = '';
 
-				/* Insert Historic */
-				$data = array('proto' => $id, 'comment' => $descript, 'cod' => '009', 'caae' => '');
-				$this -> historics -> insert_historic($data);
 				$op = $comment;
+				if (strlen($op) == 0) { $op = '1'; }
 
 				/* Change Status */
 				switch ($op) {
 					case '1' :
 						/* Disptar e-mail para membros */
 						/*******************************/
+						$data = array();
+						
+						/* SURVEY */
+						$data['content'] = $this -> ceps -> survey_members($id);
+						$this->load->view('content',$data);
+						
 						/*******************************/
 						$this -> ceps -> niec_set($id);
 						$this -> submits -> change_status($id, 'B');
-
+					
 						/* Insert Historic */
-						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '010', 'caae' => '');
+						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '004', 'caae' => '');
 						$this -> historics -> insert_historic($data);
-						$op = $comment;
+						
 
 						break;
 					case '2' :
-						/* SURVEY */
-						$this -> ceps -> survey_members($id);
 
 						$this -> ceps -> niec_set($id);
 						$this -> submits -> change_status($id, 'E');
-
+						
 						/* Insert Historic */
-						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '011', 'caae' => '');
-						$this -> historics -> insert_historic($data);
+						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '009', 'caae' => '');
+						$this -> historics -> insert_historic($data);						
 
 						break;
 					default :

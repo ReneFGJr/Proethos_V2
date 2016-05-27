@@ -24,9 +24,7 @@ class admin extends CI_Controller {
 		/* Carrega classes adicionais */
 		$css = array();
 		$js = array();
-		array_push($css, 'bootstrap.css');
 		array_push($css, 'form_sisdoc.css');
-		array_push($js, 'bootstrap.js');
 
 		/* transfere para variavel do codeigniter */
 		$data['css'] = $css;
@@ -238,5 +236,51 @@ class admin extends CI_Controller {
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);	
 		}
+	function faqs() {
+		$this -> load -> model('faqs');
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+		
+		$form = new form;
+		$form->edit = true;
+		$form->novo = true;
+		$form->row_edit = base_url('index.php/admin/faqs_ed');
+		$form->row = base_url('index.php/admin/faqs');
+		$form->tabela = $this->faqs->tabela;
+		$form = $this->faqs->row($form);
+		
+		$data['content'] = row($form);
+		$data['title'] = msg('menu_faqs');
+		$this->load->view('content',$data);
+		
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);			
+	}
+	
+	function faqs_ed($id=0,$chk='')
+		{
+		$this -> load -> model('faqs');
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+		
+		$form = new form;
+		$form->id = $id;
+		$tabela = $this->faqs->tabela;
+		$cp = $this->faqs->cp();
+		$data['content'] = $form->editar($cp,$tabela);
+		$data['title'] = msg('menu_faq');
+		$this->load->view('content',$data);
+		
+		if ($form->saved > 0)
+			{
+				redirect(base_url('index.php/admin/faqs'));
+				return('');
+			}		
+		
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);	
+		}		
 }
 ?>

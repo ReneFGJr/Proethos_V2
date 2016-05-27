@@ -5,12 +5,15 @@
 <title>:: Proethos ::</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="shortcut icon" type="image/x-icon" href="https://cip.pucpr.br/favicon.ico" />
+<link rel="stylesheet" href="<?php echo base_url('css/bootstrap.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/jquery-ui.min.css');?>">
-<link rel="stylesheet" href="<?php echo base_url('css/fonts_cicpg.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style_form.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style_font-awesome.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style_table.css');?>">
+<link rel="stylesheet" href="<?php echo base_url('css/font_roboto.css');?>">
+<link rel="stylesheet" href="<?php echo base_url('css/google_css.css');?>">
+
 <?php
 		/* ESTILOS CSS 
 		 */
@@ -25,6 +28,7 @@
 <script language="JavaScript" type="text/javascript" src="<?php echo base_url('js/jquery.js');?>"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo base_url('js/jquery.mask.js');?>"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo base_url('js/jquery-ui.min.js');?>"></script>
+<script language="JavaScript" type="text/javascript" src="<?php echo base_url('js/bootstrap.js');?>"></script>
 <script language="JavaScript" type="text/javascript" src="<?php echo base_url('js/sisdoc_form.js');?>"></script>
 
 <?php
