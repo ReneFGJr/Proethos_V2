@@ -9,6 +9,7 @@ class admin extends CI_Controller {
 		$this -> load -> helper('form');
 		$this -> load -> helper('form_sisdoc');
 		$this -> load -> helper('url');
+		$this -> load -> helper('email');
 		$this -> load -> library('session');
 		date_default_timezone_set('America/Sao_Paulo');
 		/* Security */
@@ -86,7 +87,7 @@ class admin extends CI_Controller {
 			$to = get("dd1");
 			$subject = msg('email_teste');
 			$content = msg('email_teste');
-			$ok = $this -> messages -> sendmail($to, $subject, $content);
+			$ok = sendmail($to, $subject, $content);
 			$this -> load -> view('successful', null);
 		}
 	}
@@ -101,7 +102,30 @@ class admin extends CI_Controller {
 		$form -> id = 1;
 		$cp = $this -> committees -> cp();
 
-		$data['title'] = msg('email_test');
+		$data['title'] = '';
+		$data['content'] = $form -> editar($cp, $this -> committees -> tabela);
+
+		if ($form -> saved > 0) {
+			$this -> load -> view('successful', null);
+		} else {
+			$this -> load -> view('content', $data);
+		}
+
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);			
+	}
+
+	function committee_email() {
+		$this -> load -> model('committees');
+		$secu = 1;
+		$full = 1;
+		$this -> cab($secu, $full);
+
+		$form = new form;
+		$form -> id = 1;
+		$cp = $this -> committees -> cp_email();
+
+		$data['title'] = msg('committee');
 		$data['content'] = $form -> editar($cp, $this -> committees -> tabela);
 
 		if ($form -> saved > 0) {

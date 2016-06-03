@@ -225,7 +225,7 @@ class messages extends CI_Model {
 			if (strlen($email_2) > 0) { array_push($to, $email_2);
 			}
 			//$ok = $this -> messages -> sendmail($to, $subject, $content);
-			$erro = enviaremail($to[0],$subject,$content,'');
+			$erro = sendmail($to[0],$subject,$content,'');
 		}
 		return ($erro);
 

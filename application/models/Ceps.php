@@ -28,7 +28,7 @@ class ceps extends CI_Model {
 		$r = 0;
 		$cp = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 		$link = array('', '', '', '', '', '', '', '', '', '', '');
-		$fld = array('subm_to_accept', 'pesq_reunion', 'secretaty_revision', 'pesq_revisao', 'pesq_assignada', 'pesq_reunion', 'research_ongoing', '', '', '', '');
+		$fld = array('subm_to_accept', 'pesq_check', 'pesq_reunion', 'secretaty_revision', 'pesq_revisao', 'pesq_assignada', 'pesq_reunion', 'research_ongoing', '', '', '', '');
 
 		for ($r = 0; $r < count($rlt); $r++) {
 			$line = $rlt[$r];
@@ -38,6 +38,9 @@ class ceps extends CI_Model {
 				case 'A' :
 					$cp[0] = $line['total'];
 					break;
+				case 'H' :
+					$cp[1] = $line['total'];
+					break;
 				case 'B' :
 					$cp[3] = $line['total'];
 					break;
@@ -45,7 +48,7 @@ class ceps extends CI_Model {
 					$cp[4] = $line['total'];
 					break;
 				case 'D' :
-					$cp[1] = $line['total'];
+					$cp[6] = $line['total'];
 					break;
 				case 'E' :
 					$cp[2] = $line['total'];
@@ -60,12 +63,13 @@ class ceps extends CI_Model {
 		$sz = (round(100 / $size));
 
 		$link[0] = '<a href="' . base_url('index.php/main/protocols/A') . '" class="link lt8">';
-		$link[1] = '<a href="' . base_url('index.php/main/protocols/D') . '" class="link lt8">';
+		$link[1] = '<a href="' . base_url('index.php/main/protocols/H') . '" class="link lt8">';
 		$link[2] = '<a href="' . base_url('index.php/main/protocols/E') . '" class="link lt8">';
 		$link[3] = '<a href="' . base_url('index.php/main/protocols/B') . '" class="link lt8">';
 		$link[4] = '<a href="' . base_url('index.php/main/protocols/C') . '" class="link lt8">';
 		$link[5] = '<a href="' . base_url('index.php/main/protocols/H') . '" class="link lt8">';
 		$link[6] = '<a href="' . base_url('index.php/main/protocols/P') . '" class="link lt8">';
+		$link[7] = '<a href="' . base_url('index.php/main/protocols/D') . '" class="link lt8">';
 
 		$sx = '<table width="100%">';
 		$sx .= '<tr align="center" class="lt2">';
@@ -370,6 +374,50 @@ class ceps extends CI_Model {
 		return ($sx);
 	}
 
+	/* SURVEY */
+	function action_006($id = 0) {
+		$data = array();
+		$data['id'] = $id;
+		$sx = $this -> load -> view('committee/survey.php', $data, true);
+		$sx .= '<script language="JavaScript" type="text/javascript" src="' . base_url('js/action/js00H.js') . '"></script>' . cr();
+		return ($sx);
+	}
+
+	/* SURVEY DECISION */
+	function action_007($id = 0) {
+		$data = array();
+		$data['total_yes'] = 0;
+		$data['total_no'] = 0;
+		$sx = '';
+		$sx .= '<div class="rows" id="ac007">';
+
+		$sx .= $this->load->view('committee/survey_abstract',$data,true);
+		$sx .= '<div class="row">'.cr();
+		$sx .= '	<div class="col-md-12">';
+		$sx .= '	<h3>' . msg('action_accept_016') . '</h3>';
+		$sx .= '	</div>';
+		$sx .= '</div>' . cr();
+
+		$sx .= '<div class="row">'.cr();
+		$sx .= '	<div class="col-md-12">';
+		$sx .= '		<p>';
+		$sx .= 			msg('accept_manu_survey_direct');
+		$sx .= '		<input type="radio" name="bt007v" id="bt007v1" value 1> '.msg('yes_accept');
+		$sx .= '		<input type="radio" name="bt007v" id="bt007v2" value=2> '.msg('yes_isento');
+		$sx .= '		</p>';
+
+		$sx .= '		<input type="submit" class="btn btn-primary" id="bt007a" value="' . msg('action_survey') . '">';
+		$sx .= ' ';
+		$sx .= '		<input type="hidden" id="proto7" name="proto7" value="' . $id . '">';
+		$sx .= '		<input type="hidden" id="check7" name="check7" value="' . checkpost_link($id) . '">';
+		$sx .= '		<input type="hidden" id="link7"  name="link7"  value="' . base_url('index.php/ajax/action/007') . '">';
+		$sx .= '	</div>';
+		$sx .= '</div>' . cr();
+		//$sx .= 'x009x';
+		$sx .= '<script language="JavaScript" type="text/javascript" src="' . base_url('js/action/js007.js') . '"></script>' . cr();
+		return ($sx);
+	}
+
 	/* Reactive to edition */
 	function action_999($id = 0) {
 		$sx = '';
@@ -394,8 +442,9 @@ class ceps extends CI_Model {
 	}
 
 	function niec_set($id) {
-		$this->niec_next();
-		
+		$this -> niec_next();
+		return ('');
+
 		$sql = "select * from " . $this -> tabela . " where id_cep = " . $id;
 		$rlt = $this -> db -> query($sql);
 		$rlt = $rlt -> result_array();
@@ -416,7 +465,7 @@ class ceps extends CI_Model {
 					$versao = strzero($cline['cep_versao'], 3);
 					$niec = $pre . '.' . $nra . '.' . $versao;
 					$sql = "update " . $this -> tabela . " set cep_caae = '" . $niec . "' where id_cep = " . $cline['id_cep'];
-					$this->db->query($sql);
+					$this -> db -> query($sql);
 				}
 			}
 
@@ -425,55 +474,180 @@ class ceps extends CI_Model {
 	}
 
 	function niec_next() {
-		$sql = "select cep_caae from ".$this->tabela." order by cep_caae desc limit 1";
-		$rlt = $this->db->query($sql);
-		$rlt = $rlt->result_array();
-		if (count($rlt) > 0)
-			{
-				$line = $rlt[0];
-				$niec = trim($line['cep_caae']);
-				$niec = round(sonumero(substr($niec,0,strlen($niec)-3)));
-				$niec++;
-			} else {
-				$niec = 1;
-			}
-		$sql = "update _committee set cm_niec = $niec ";
-		$rlt = $this->db->query($sql);
-		
-		return(1);
-	}
-	
-	function survey_members($id)
-		{
-			$data = array();
-			$messa = $this->messages->recover('survey_email',$data);
-			
-			$sql = "select * from usuario where us_perfil like '%#MEM%' and us_ativo = 1";
-			$rlt = $this->db->query($sql);
-			$rlt = $rlt->result_array();
-			$sx = '<table class="table lt2" width="100%">';
-			$sx .= '<tr><th>'.msg('member').'</th><th>'.msg('email').'</th><th>'.msg('status').'</th></tr>'.cr();
-			$tot = 0;
-			$proto = '';
-			for ($r=0;$r < count($rlt);$r++)
-				{
-					$line = $rlt[$r];
-					$tot++;
-					$status = msg('send_mail');
-					$id_us = $line['id_us'];
-					$sx .= '<tr>';
-					$sx .= '<td>'.$line['us_nome'].'</td>';
-					$sx .= '<td>'.$line['us_email'].'</td>';
-					
-					
-					$ok = $this->messages->email_to_user($id_us, $messa, $proto);
-					$sx .= '<td class="alert alert-success">'.$ok.'</td>';
-					
-				}
-			$sx .= '<tr><td>'.msg('sent_to').' '.$tot.' '.msg('members').'</td></tr>'.cr();
-			$sx .= '</table>';
-			return($sx);
+		$sql = "select cep_caae from " . $this -> tabela . " order by cep_caae desc limit 1";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+		if (count($rlt) > 0) {
+			$line = $rlt[0];
+			$niec = trim($line['cep_caae']);
+			$niec = round(sonumero(substr($niec, 0, strlen($niec) - 3)));
+			$niec++;
+		} else {
+			$niec = 1;
 		}
+		$sql = "update _committee set cm_niec = $niec ";
+		$rlt = $this -> db -> query($sql);
+
+		return (1);
+	}
+
+	function survey_members($id) {
+		$data = array();
+		$messa = $this -> messages -> recover('survey_email', $data);
+
+		$sql = "select * from usuario where us_perfil like '%#MEM%' and us_ativo = 1";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+		$sx = '<table class="table lt1" width="100%">';
+		$sx .= '<tr><th>' . msg('member') . '</th><th>' . msg('email') . '</th><th>' . msg('status') . '</th></tr>' . cr();
+		$tot = 0;
+		$proto = '';
+		for ($r = 0; $r < count($rlt); $r++) {
+			$line = $rlt[$r];
+			$tot++;
+			$status = msg('send_mail');
+			$id_us = $line['id_us'];
+			$sx .= '<tr>';
+			$sx .= '<td>' . $line['us_nome'] . '</td>';
+			$sx .= '<td>' . $line['us_email'] . '</td>';
+
+			$ok = $this -> messages -> email_to_user($id_us, $messa, $proto);
+			$sx .= '<td class="alert alert-success">' . $ok . '</td>';
+
+		}
+		$sx .= '<tr><td>' . msg('sent_to') . ' ' . $tot . ' ' . msg('members') . '</td></tr>' . cr();
+		$sx .= '</table>';
+		return ($sx);
+	}
+
+	function show_protocols($status = '') {
+		$sql = "select * from " . $this -> tabela . "
+					left join usuario on cep_pesquisador = us_codigo
+					left join (select count(*) as comments, cepc_codigo from cep_comment group by cepc_codigo) as comments on cepc_codigo = cep_protocol
+					where cep_status = '$status' ";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+
+		$tot = 0;
+		$sx = '';
+		$sx .= '<h1>' . msg('cep_status_' . $status) . '</h1>' . cr();
+		$sx .= '<table width="100%" class="table lt2">';
+		for ($r = 0; $r < count($rlt); $r++) {
+			$line = $rlt[$r];
+			$link = '<a href="' . base_url('index.php/main/protocol/' . $line['id_cep'] . '/' . checkpost_link($line['id_cep'])) . '" class="lt3">';
+			$tot++;
+			$sx .= '<tr>';
+			$sx .= '<td width="2%" align="center">';
+			$sx .= $tot;
+			$sx .= '</td>';
+			$sx .= '<td>';
+			$sx .= $link . $line['cep_titulo'] . '</a>';
+			$sx .= '<br><font class="lt1"><i>' . $line['us_nome'] . '</i></font>';
+			$sx .= '<br><font class="lt0">' . msg('update') . ': ' . stodbr($line['cep_atualizado']) . '</font>';
+			$sx .= ' - ';
+			$sx .= '<font class="lt0">' . round($line['comments']) . ' ' . msg('comment') . '</fonts>';
+			$sx .= '</td>';
+
+			$sx .= '<td width="2%">';
+			$sx .= $link;
+			$sx .= '<span class="glyphicon glyphicon-search" aria-hidden="true"></span>';
+			$sx .= '</a>';
+			$sx .= '</td>';
+		}
+		$sx .= '<tr><td colspan="10">' . msg('total') . ' ' . $tot . ' ' . msg('records') . '</td></tr>' . cr();
+		$sx .= '</table>';
+		return ($sx);
+	}
+
+	function survey($id) {
+		$data['content'] = $this -> action_006($id);
+		$this -> load -> view('content', $data);
+	}
+
+	function survey_voted($proto, $id) {
+		$proto = strzero($proto, 7);
+		$id_us = strzero($id, 7);
+
+		$sql = "select * from cep_survey where sr_protocolo = '$proto' ";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+		$ok = 0;
+		for ($r = 0; $r < count($rlt); $r++) {
+			$line = $rlt[$r];
+			if ($line['sr_member'] == $id_us) { $ok = 1;
+			}
+		}
+		$tot = count($rlt);
+
+		return ( array($ok, $tot));
+	}
+
+	function survey_answer($proto, $id, $answer) {
+		$id_us = strzero($id, 7);
+		$proto = strzero($proto, 7);
+		$date = date("Ymd");
+		$time = date("H:i");
+		$ip = ip();
+		$yes = 1;
+		$no = 0;
+		echo '-=->' . $answer;
+		if ($answer == 0) {
+			$yes = 0;
+			$no = 1;
+		}
+
+		$sql = "select * from cep_survey where sr_protocolo = '$proto' and sr_member = '$id_us' ";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+		if (count($rlt) > 0) {
+			$line = $rlt[0];
+			$sql = "update cep_survey set sr_yes = $yes, sr_no = $no,
+			sr_date = '$date', sr_time='$time',
+			sr_ip = '$ip' 
+					where id_sr = " . $line['id_sr'];
+			$rlt = $this -> db -> query($sql);
+		} else {
+			$sql = "insert into cep_survey
+							(
+							sr_protocolo, sr_member, 
+							sr_yes, sr_no,
+							sr_date, sr_time, 
+							sr_ip)
+							values
+							(
+							'$proto','$id_us',
+							$yes, $no,
+							'$date','$time',
+							'$ip'
+							) 
+					";
+			$rlt = $this -> db -> query($sql);
+		}
+		echo '<hr>' . $sql;
+		return (1);
+	}
+
+	function survey_decision($id)
+		{
+		$data['content'] = $this -> action_007($id);
+		$this -> load -> view('content', $data);			
+		}
+
+	function survey_enquete($id) {
+		$id_us = $_SESSION['id'];
+		$voted = $this -> ceps -> survey_voted($id, $id_us);
+		print_r($voted);
+		if ($voted[0] == 0) {
+			$data['content'] = $this -> ceps -> survey($id);
+			$this -> load -> view('content', $data);
+		} else {
+			$data['content'] = msg('survey_voted') . ', ' . msg('survey_in_progess');
+			$data['type'] = 'info';
+			$data['content_info'] = msg('total') . ' ' . $voted[1] . ' ' . msg('anwsers');
+			$this -> load -> view('message', $data);
+		}
+
+	}
 
 }
 ?>

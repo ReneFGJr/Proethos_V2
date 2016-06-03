@@ -66,6 +66,39 @@ class users extends CI_model {
 
 	}
 
+	/* Check if is the new email */
+	function is_new_user($email)
+		{
+			$sql = "select * from usuario where us_email = '$email' ";
+			$rlt = $this->db->query($sql);
+			$rlt = $rlt->result_array();
+			if (count($rlt) == 0)
+				{
+					return(1);
+				} else {
+					return(0);
+				}
+		}
+
+	function cp_new_user() {
+		global $messa, $dd;
+		$cp = array();
+		if (strlen($dd[1]) == 0) { $dd[1] = '#RES';
+		}
+		array_push($cp, array('$H8', '', '', False, True));
+		array_push($cp, array('$A', '', msg('about_user'), False, True));
+		array_push($cp, array('$S100', 'us_nome', msg('name'), True, True));
+		array_push($cp, array('$S100', 'us_email', msg('email'), True, True));
+		/* Msg = dd4 */
+		array_push($cp, array('$M', '', '', False, True));
+		array_push($cp, array('$CAPTCHA', '', msg('copy_the_text'), True, True));
+		array_push($cp, array('$B8', '', msg('registrarse'), False, True));
+
+		return ($cp);
+
+	}
+
+
 	function cp_myaccount() {
 		global $messa;
 		$cp = array();

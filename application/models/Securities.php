@@ -11,20 +11,32 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class securities extends CI_model {
-
-	function perfil() {
-		return (1);
+function perfil($tp='xxx') {
+	if ((isset($_SESSION['id'])) and (strlen($_SESSION['id']) > 0)) {
+		$chk1 = trim(md5($_SESSION['id'] . $_SESSION['name'] . $_SESSION['badge'] . date("Ymd")));
+		$chk2 = trim($_SESSION['checksun']);
+		if ($chk1 == $chk2) {
+			$perfil = $_SESSION['perfil'];
+			if (strpos($perfil,$tp)) {
+				return (1);
+			} else {
+				return (0);
+			}
+		}
+	} else {
+		return (0);
 	}
+}
+
+class securities extends CI_model {
 
 	function security() {
 		if ((isset($_SESSION['id'])) and (strlen($_SESSION['id']) > 0)) {
-			$chk1 = trim(md5($_SESSION['id'].$_SESSION['name'].$_SESSION['badge'].date("Ymd")));
-			$chk2 = trim($_SESSION['checksun']); 
-			if ((!isset($_SESSION['checksun'])) or ($chk1 != $chk2))
-				{
-					redirect(base_url('index.php/main/login'));
-				}			
+			$chk1 = trim(md5($_SESSION['id'] . $_SESSION['name'] . $_SESSION['badge'] . date("Ymd")));
+			$chk2 = trim($_SESSION['checksun']);
+			if ((!isset($_SESSION['checksun'])) or ($chk1 != $chk2)) {
+				redirect(base_url('index.php/main/login'));
+			}
 			return ('');
 		} else {
 			redirect(base_url('index.php/main/login'));
@@ -38,8 +50,8 @@ class securities extends CI_model {
 	}
 
 	function security_set($rlt) {
-		$chk = md5($rlt['id_us'].$rlt['us_nome'].$rlt['us_cracha'].date("Ymd"));
-		$sec = array('id' => $rlt['id_us'], 'name' => $rlt['us_nome'], 'badge' => $rlt['us_cracha'], 'instituition' => $rlt['us_instituition'], 'email' => $rlt['us_email'], 'perfil'=>$rlt['us_perfil'], 'checksun'=>$chk);
+		$chk = md5($rlt['id_us'] . $rlt['us_nome'] . $rlt['us_cracha'] . date("Ymd"));
+		$sec = array('id' => $rlt['id_us'], 'name' => $rlt['us_nome'], 'badge' => $rlt['us_cracha'], 'instituition' => $rlt['us_instituition'], 'email' => $rlt['us_email'], 'perfil' => $rlt['us_perfil'], 'checksun' => $chk);
 		$this -> session -> set_userdata($sec);
 		return ('');
 	}

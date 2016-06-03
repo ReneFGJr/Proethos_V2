@@ -85,20 +85,19 @@ class ajax extends CI_controller {
 				/* Change Status */
 				switch ($op) {
 					case '1' :
-						/* Disptar e-mail para membros */
+						/* Send e-mail to members */
 						/*******************************/
 						$data = array();
 						
-						/* SURVEY */
 						$data['content'] = $this -> ceps -> survey_members($id);
 						$this->load->view('content',$data);
 						
 						/*******************************/
 						$this -> ceps -> niec_set($id);
-						$this -> submits -> change_status($id, 'B');
+						$this -> submits -> change_status($id, 'H');
 					
 						/* Insert Historic */
-						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '004', 'caae' => '');
+						$data = array('proto' => $id, 'comment' => $descript, 'cod' => '00H', 'caae' => '');
 						$this -> historics -> insert_historic($data);
 						
 
@@ -148,6 +147,16 @@ class ajax extends CI_controller {
 
 				return ('');
 				break;
+			case '00H':
+				$this -> load -> model('ceps');
+				$user_id = $_SESSION['id'];
+				$user_badge = $_SESSION['badge'];
+				$answer = get("comment");
+				$proto = get('proto');
+				$this->ceps->survey_answer($proto,$user_id,$answer);
+				break;
+			default:
+				echo 'Not implemented';
 		}
 
 	}

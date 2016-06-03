@@ -16,14 +16,13 @@
 /*
  * Sistema de e-mail
  */
-$admin_nome = 'Rene F. Gabriel';
-$email_adm = 'rene.gabriel@pucpr.br';
+$admin_nome = '';
+$email_adm = '';
 
 require_once ("libs/email/PHPMailerAutoload.php");
 
-function enviaremail($para, $titulo, $texto) {
+function sendmail($para, $titulo, $texto) {
 	global $email_from, $email_from_name, $email_smtp, $email_pass, $email_user, $email_auth, $email_debug, $email_replay, $email_sign;
-
 	if (strlen($email_from) == 0) {
 		echo '<H1>Erro #120#</h1>';
 		echo '<PRE>';
@@ -45,6 +44,10 @@ function enviaremail($para, $titulo, $texto) {
 		exit ;
 	}
 	switch ($email_auth) {
+		case 'OFF' :
+			return(msg('offline_mode'));
+			break;
+					
 		case 'AUTH' :
 			$mail = new email;
 			$mail -> titulo = $titulo;
@@ -115,7 +118,7 @@ class email {
 	var $debug = 0;
 
 	/* Dados do enviador */
-	var $email = 'rene@sisdoc.com.br';
+	var $email = '';
 	var $email_replay = '';
 	var $email_name = '';
 

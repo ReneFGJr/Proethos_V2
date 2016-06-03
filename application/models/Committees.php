@@ -44,6 +44,7 @@ class committees extends CI_model {
 
 		array_push($cp, array('$S100', 'cm_name', msg('committee_name'), True, True));
 		array_push($cp, array('$S100', 'cm_site', msg('committe_site'), True, True));
+		array_push($cp, array('$S40', 'cm_phone', msg('phone'), True, True));
 
 		array_push($cp, array('$M', '', msg('committee_id_info'), False, True));
 
@@ -56,16 +57,6 @@ class committees extends CI_model {
 		array_push($cp, array('$M', '', msg('address_geo_info'), false, True));
 		array_push($cp, array('$S10', 'cm_lat', msg('coord_x'), True, True));
 		array_push($cp, array('$S10', 'cm_long', msg('coord_y'), True, True));
-		array_push($cp, array('$}', '', '', False, True));
-
-		array_push($cp, array('${', '', msg('contact_committee'), False, True));
-		array_push($cp, array('$S40', 'cm_phone', msg('phone'), True, True));
-		array_push($cp, array('$S100', 'cm_admin_name', msg('admin_name'), True, True));
-		array_push($cp, array('$S100', 'cm_admin_email', msg("admin_email"), True, True));
-		array_push($cp, array('$S100', 'cm_email_replay', msg("admin_email_replay"), False, True));
-		array_push($cp, array('$O ' . $tp, 'cm_admin_email_tipo', msg("admin_email_tipo"), True, True));
-		array_push($cp, array('$S100', 'cm_admin_email_smtp', msg("admin_email_smtp"), True, True));
-		array_push($cp, array('$P20', 'cm_admin_email_pass', msg("admin_email_password"), False, True));
 		array_push($cp, array('$}', '', '', False, True));
 
 		array_push($cp, array('${', '', msg('contact_param'), False, True));
@@ -83,6 +74,31 @@ class committees extends CI_model {
 		array_push($cp, array('$}', '', '', False, True));
 		///array_push($cp, array('$O utf-8:utf-8', 'cm_charcode', 'Encoding Char Type', True, True));
 		array_push($cp, array('$HV', 'cm_charcode', 'utf-8', True, True));
+
+		array_push($cp, array('$B8', '', msg('update'), False, True));
+
+		return ($cp);
+	}
+	function cp_email() {
+		global $dd;
+		$cp = array();
+		if (strlen($dd[2]) < 4) { $msgcode = '<font color="red"></font>';
+		}
+		$tp = 'MAIL:' . msg('method_1');
+		$tp .= '&AUTH:' . msg('method_2');
+		$tp .= '&AUTS:' . msg('method_3');
+		$tp .= '&OFF:' . msg('method_offline');
+
+		array_push($cp, array('$H8', 'id_cm', '', False, True));
+
+		array_push($cp, array('${', '', msg('contact_committee'), False, True));
+		array_push($cp, array('$S100', 'cm_admin_name', msg('admin_name'), True, True));
+		array_push($cp, array('$S100', 'cm_admin_email', msg("admin_email"), True, True));
+		array_push($cp, array('$S100', 'cm_email_replay', msg("admin_email_replay"), False, True));
+		array_push($cp, array('$O ' . $tp, 'cm_admin_email_tipo', msg("admin_email_tipo"), True, True));
+		array_push($cp, array('$S100', 'cm_admin_email_smtp', msg("admin_email_smtp"), True, True));
+		array_push($cp, array('$P20', 'cm_admin_email_pass', msg("admin_email_password"), False, True));
+		array_push($cp, array('$}', '', '', False, True));
 
 		array_push($cp, array('$B8', '', msg('update'), False, True));
 

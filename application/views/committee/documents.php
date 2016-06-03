@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row standard">
 	 <div class="col-md-12"><h1><?php echo msg('documents_title'); ?></h1></div>
 	 <div class="col-md-12"><h2><?php echo msg('proethos_files'); ?></h2>
 	 	<p><?php echo msg('proethos_files_inf'); ?></p>

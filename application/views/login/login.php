@@ -35,6 +35,6 @@
 		</div>
 	<?php } ?>			
 	<div class="row">		
-		<div class="col-md-4 col-md-offset-4"><a href="#"><?=msg('user_new'); ?></a></div>
+		<div class="col-md-4 col-md-offset-4"><a href="<?php echo base_url('index.php/main/user_new'); ?>"><?=msg('user_new'); ?></a></div>
 	</div>			
 </form>

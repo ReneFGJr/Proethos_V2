@@ -62,7 +62,7 @@ class publicc extends CI_Controller {
 		{
 		$this->load->model('faqs');
 		
-		$secu = 1;
+		$secu = 0;
 		$full = 0;
 		$this -> cab($secu, $full);
 		

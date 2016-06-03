@@ -71,6 +71,43 @@ class main extends CI_Controller {
 		$this -> load -> view("header/footer", null);
 	}
 
+	function user_new() {
+		/* Model */
+		$this -> load -> model('users');
+		$this -> load -> model('securities');
+
+		$secu = 0;
+		$full = 0;
+		$this -> cab($secu, $full);
+
+		/* load login page */
+		$email = get("dd3");
+		$name = get("dd2");
+		$cp = $this -> users -> cp_new_user();
+
+		if ((strlen($email) > 0) and (strlen($name) > 0)) {
+			$is_new = $this -> users -> is_new_user($email);
+			echo '-->' . $is_new;
+			switch ($is_new) {
+				/* exist */
+				case '0' :
+					$msg = '
+						<div class="alert alert-danger" role="alert">' . msg('email_exist') . '</div>';
+					$cp[4][2] = $msg;
+					break;
+				case '1' :
+					break;
+			}
+		}
+
+		$form = new form;
+		$data['content'] = $form -> editar($cp, '');
+		$this -> load -> view('content', $data);
+
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);
+	}
+
 	function password() {
 		/* Model */
 		$this -> load -> model('users');
@@ -183,30 +220,32 @@ class main extends CI_Controller {
 		$full = 1;
 		$this -> cab($secu, $full);
 
-		switch($status)
-			{
-			case 'A':
+		switch($status) {
+			case 'A' :
 				$sx = $this -> submits -> show_protocols($status);
 				break;
-			case 'B':
+			case 'B' :
 				$sx = $this -> submits -> show_protocols($status);
 				break;
-			case 'C':
-				$sx = $this -> submits -> show_protocols($status);
-				break;								
-			case 'D':
-				$sx = $this -> submits -> show_protocols($status);
-				break;				
-			case 'E':
+			case 'C' :
 				$sx = $this -> submits -> show_protocols($status);
 				break;
-			case 'P':
+			case 'D' :
 				$sx = $this -> submits -> show_protocols($status);
-				break;				
-			default:
+				break;
+			case 'E' :
+				$sx = $this -> submits -> show_protocols($status);
+				break;
+			case 'H' :
+				$sx = $this -> ceps -> show_protocols($status);
+				break;
+			case 'P' :
+				$sx = $this -> submits -> show_protocols($status);
+				break;
+			default :
 				$sx = '';
 				break;
-				}
+		}
 		$data['content'] = $sx;
 		$this -> load -> view('content', $data);
 
@@ -224,6 +263,8 @@ class main extends CI_Controller {
 		$this -> load -> model('comments');
 		$this -> load -> model('historics');
 
+		$id_us = $_SESSION['id'];
+
 		$secu = 1;
 		$full = 1;
 		$this -> cab($secu, $full);
@@ -231,7 +272,19 @@ class main extends CI_Controller {
 
 		$this -> load -> view('header/breadcrumbs', $data);
 
+		/* CHECKSUM */
+		if ($chk != checkpost_link($id)) {
+			$this -> load -> view('errors/protocol_invalid_checksum', null);
+			$this -> foot();
+			return ('');
+		}
+
 		$data = $this -> ceps -> le($id);
+		if (count($data) < 10) {
+			$this -> load -> view('errors/protocol_not_found', null);
+			$this -> foot();
+			return ('');
+		}
 
 		$status = $data['cep_status'];
 
@@ -263,18 +316,27 @@ class main extends CI_Controller {
 		if ($data['cep_status'] == '@') {
 			$data['content'] = $this -> ceps -> submit_documments($id);
 			$this -> load -> view('content', $data);
-		}		
-		
+		}
 
-		switch ($status) {
-			case '@' :
-				
-				break;
-		}		
+		/* Survey */
+		if ($data['cep_status'] == 'H') {
+			if (perfil('#MEM')) {
+				$data['content'] = $this -> ceps -> survey_enquete($id);
+				$this -> load -> view('content', $data);
+			}
+			
+			if (perfil('#ADM')) {
+				$data['content'] = $this -> ceps -> survey_decision($id);
+				$this -> load -> view('content', $data);
+			}
+		}
+		$this -> foot();
+	}
 
+	function foot() {
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);
-
+		return ('');
 	}
 
 	function myaccount() {
@@ -317,31 +379,31 @@ class main extends CI_Controller {
 
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);
-		echo '===>'.$form->saved;
-		if ($form->saved > 0)
-			{
-				redirect(base_url('index.php/main/myaccount'));
-				return('');
-			}
+		echo '===>' . $form -> saved;
+		if ($form -> saved > 0) {
+			redirect(base_url('index.php/main/myaccount'));
+			return ('');
+		}
 
 		$this -> load -> view("header/content_close", null);
-		$this -> load -> view("header/footer", null);			
+		$this -> load -> view("header/footer", null);
 	}
-	function members_committee()
-		{
+
+	function members_committee() {
 		/* Model */
 		$this -> load -> model('committees');
 
 		$secu = 1;
 		$full = 1;
 		$this -> cab($secu, $full);
-		
-		$data['content'] = $this->committees->member_committee_list();
+
+		$data['content'] = $this -> committees -> member_committee_list();
 		$data['title'] = msg('members_committee');
-		$this->load->view('content',$data);
+		$this -> load -> view('content', $data);
 
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);
-		}
+	}
+
 }
 ?>

@@ -13,42 +13,36 @@
 // Software. If not, see
 // https://raw.githubusercontent.com/bireme/proethos/master/LICENSE.txt
 
-if (isset($_SESSION['name']))
-	{
-		$user = $_SESSION['name'];
-	} else {
-		$user = '';
-	}
-	
+if (isset($_SESSION['name'])) {
+	$user = $_SESSION['name'];
+} else {
+	$user = '';
+}
+
 /******* Perfil de administrador */
 $admin = 0;
-if ($this->securities->perfil("#ADM"))
-	{
-		$admin = 1;
-	}
-
+if (perfil("#ADM")) {
+	$admin = 1;
+}
 ?>
 <style>
 	.navbar-nav-item:hover {
 		background-color: #5f5f8e;
 	}
-	.navbar
-		{
-			background-color: #1f1f5e;
-			color: #0000ff;	
-		}
-	.navbar-default .navbar-nav > li > a, .dropdown
-		{
-			opacity: 1;
-			color: #ffffff;
-			font-family: "Yanone Kaffeesatz", "RobotoThin", Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;
-			font-size: 20px;		
-		}
-	.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus
-		{
-			color: #ffffff;
-		}
-		
+	.navbar {
+		background-color: #1f1f5e;
+		color: #0000ff;
+	}
+	.navbar-default .navbar-nav > li > a, .dropdown {
+		opacity: 1;
+		color: #ffffff;
+		font-family: "Yanone Kaffeesatz", "RobotoThin", Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;
+		font-size: 20px;
+	}
+	.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+		color: #ffffff;
+	}
+
 </style>
 <!-- Fixed navbar -->
 <nav class="navbar navbar-default">
@@ -61,37 +55,48 @@ if ($this->securities->perfil("#ADM"))
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Proethos</a>
+      <a class="navbar-brand" href="<?php echo base_url('index.php/main');?>"><img src="<?php echo base_url('img/logos/logo_proethos.png');?>" height="50"></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-      	<?php 
-      	if (strlen($user) > 0)
-			{
-				echo '<li class="navbar-nav-item"><a href="#" class="nav-a">'.msg('home').'</a></li>'.cr();
-				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/main/research').'">'.msg("research_summary").'</a></li>'.cr();
-				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/main/committee').'">'.msg("member_committee").'</a></li>'.cr();
-			} 
-		echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/publicc/faq').'">'.msg("menu_faq").'</a></li>'.cr();
-		echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/publicc/documents').'">'.msg("menu_documents").'</a></li>'.cr();
-		echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/publicc/contact').'">'.msg("contact").'</a></li>'.cr();
-		
-      	if ($admin == 1)
-			{				
-				echo '<li class="navbar-nav-item"><a href="'.base_url('index.php/admin').'">'.msg("menu_admin").'</a></li>'.cr();
-			} ?>
+      	<?php
+		if (strlen($user) > 0) {
+			//echo '<li class="navbar-nav-item"><a href="#" class="nav-a">' . msg('home') . '</a></li>' . cr();
+			echo '<li class="navbar-nav-item"><a href="' . base_url('index.php/main/research') . '">' . msg("research_summary") . '</a></li>' . cr();
+			echo '<li class="navbar-nav-item"><a href="' . base_url('index.php/main/committee') . '">' . msg("member_committee") . '</a></li>' . cr();
+			echo '<ul class="nav navbar-nav navbar-right">
+        				<li class="dropdown">
+          					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">' . msg('more') . '<span class="caret"></span></a>
+          					<ul class="dropdown-menu">';
+			echo '				<li class="navbar-nav-item"><a href="' . base_url('index.php/publicc/faq') . '">' . msg("menu_faq") . '</a></li>' . cr();
+			echo '				<li class="navbar-nav-item"><a href="' . base_url('index.php/publicc/documents') . '">' . msg("menu_documents") . '</a></li>' . cr();
+			echo '				<li class="navbar-nav-item"><a href="' . base_url('index.php/publicc/contact') . '">' . msg("contact") . '</a></li>' . cr();
+			echo '			</ul>
+        				</li>
+      				</ul>';
+												
+		} else {
+			echo '<li class="navbar-nav-item"><a href="' . base_url('index.php/publicc/faq') . '">' . msg("menu_faq") . '</a></li>' . cr();
+			echo '<li class="navbar-nav-item"><a href="' . base_url('index.php/publicc/documents') . '">' . msg("menu_documents") . '</a></li>' . cr();
+			echo '<li class="navbar-nav-item"><a href="' . base_url('index.php/publicc/contact') . '">' . msg("contact") . '</a></li>' . cr();
+		}
+
+		if (($admin == 1) and (strlen($user) > 0)) {
+			echo '<li class="navbar-nav-item"><a href="' . base_url('index.php/admin') . '">' . msg("menu_admin") . '</a></li>' . cr();
+		}
+ ?>
       </ul>
 
    	<?php if (strlen($user) > 0) { ?>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $user;?><span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $user; ?><span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="<?php echo base_url('index.php/main/myaccount');?>"><?php echo msg('my_account');?></a></li>
+            <li><a href="<?php echo base_url('index.php/main/myaccount'); ?>"><?php echo msg('my_account'); ?></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="<?php echo base_url('index.php/main/logout');?>"><?php echo msg('logout');?></a></li>
+            <li><a href="<?php echo base_url('index.php/main/logout'); ?>"><?php echo msg('logout'); ?></a></li>
           </ul>
         </li>
       </ul>

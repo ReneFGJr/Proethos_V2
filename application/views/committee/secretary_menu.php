@@ -9,8 +9,8 @@
 			</li>
 		</ul>
 	</div>
-	<div class="col-md-12 lt4">
-		<b><?php echo msg('website');?></b>
+	<div class="col-md-12">
+		<h3><?php echo msg('website');?></h3>
 	</div>
 	<div class="col-md-12">
 		<ul class="nav nav-pills">
@@ -21,3 +21,9 @@
 	</div>
 	
 </div>
+
+
+
+
+
+

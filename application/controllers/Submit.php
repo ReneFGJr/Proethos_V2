@@ -175,13 +175,22 @@ class submit extends CI_Controller {
 		$this -> load -> model('messages');
 		$this -> load -> model('comments');
 		$this -> load -> model('historics');
+		
+		/* checks */
+		if ($chk != checkpost_link($id))
+			{
+				redirect(base_url('index.php/main'));
+			}
 
 		$secu = 1;
 		$full = 0;
 		$this -> cab($secu, $full);
 
 		$data = $this -> submits -> le($id);
-
+		if (count($data) < 10)
+			{
+				redirect('index.php');
+			}
 		$data['title'] = '';
 		$data['content'] = $this -> load -> view('submit/view', $data, true);
 		$this -> load -> view('content', $data);
