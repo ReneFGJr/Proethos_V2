@@ -33,11 +33,6 @@ class admin extends CI_Controller {
 
 		$this -> load -> view('header/header', $data);
 		$this -> load -> view('header/cab', $data);
-		if ($full == 1) {
-			$this -> load -> view('header/content_open_full', null);
-		} else {
-			$this -> load -> view('header/content_open', null);
-		}
 	}
 
 	function index() {
@@ -305,6 +300,43 @@ class admin extends CI_Controller {
 		
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);	
+		}
+	function admin_submission($type='',$pag='1')
+		{
+		$this->load->model('fields');
+		
+		$this -> load -> model('faqs');
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+
+		/* DATA */
+		$data = array();
+		
+		switch($type)
+			{
+			case 'project':
+				$data['pages'] = 7;
+				$data['page'] = 'index.php/admin/admin_submission/'.$type.'/';
+				$data['active'] = $pag;
+				$data['caption'] = 'cep_submit_manuscrito_field';
+				$typec = '00001';
+				break;	
+			default:
+				$data['pages'] = 3;
+				$data['page'] = 'index.php/admin/admin_submission/'.$type.'/';
+				$data['active'] = $pag;
+				$data['caption'] = 'amendment_'.$type;
+				$typec = strzero($type,5);
+				break;								
+			}		
+		$this->load->view('records/pages',$data);
+		
+		/* Show Fields */
+		
+		$data['content'] = $this->fields->row_records($typec,$pag);
+		$this->load->view('content',$data);		
+			
 		}		
 }
 ?>

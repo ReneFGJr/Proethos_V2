@@ -32,11 +32,6 @@ class main extends CI_Controller {
 
 		$this -> load -> view('header/header', $data);
 		$this -> load -> view('header/cab', $data);
-		if ($full == 1) {
-			$this -> load -> view('header/content_open_full', null);
-		} else {
-			$this -> load -> view('header/content_open', null);
-		}
 	}
 
 	function index() {
@@ -156,19 +151,21 @@ class main extends CI_Controller {
 		$secu = 1;
 		$full = 1;
 		$this -> cab($secu, $full);
-		$txt = '';
-		$txt .= '<h1>' . msg('research') . '</h1>' . cr();
-		$txt .= $this -> load -> view('investigators/search', null, true);
-		$data['content'] = $txt;
+		$data['title'] = msg('research');
+		$data['content'] = $this -> load -> view('investigators/search', null, true);
 		$this -> load -> view('content', $data);
-
-		$data['content'] = $this -> ceps -> resume_investigator($us);
-		$data['title_resume'] = msg('caption_status_');
-		$this -> load -> view('investigators/resume', $data);
 
 		/*-- Submissão aberta --*/
+		$data['title'] = '';
 		$data['content'] = '<a href="' . base_url('index.php/submit/new_project') . '" class="btn btn-primary btn-lg">' . msg('submit_new_project') . '</a><br><br>';
 		$this -> load -> view('content', $data);
+		
+		/* Project */
+		
+		$data['content'] = $this -> ceps -> resume_investigator($us);
+		$data['title'] = msg('caption_status_');;
+		$this -> load -> view('content', $data);
+						
 
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);
@@ -184,16 +181,16 @@ class main extends CI_Controller {
 		$secu = 1;
 		$full = 1;
 		$this -> cab($secu, $full);
-		$txt = '';
-		$txt .= '<h1>' . msg('resume_committee') . '</h1>' . cr();
-		$data['content'] = $txt;
-		$this -> load -> view('content', $data);
-
+		
+		/* RESUME COMMITTEE */
+		$data['title']  = msg('resume_committee') . cr();
 		$data['content'] = $this -> ceps -> resume_committee($us);
 		$this -> load -> view('content', $data);
 
+		/* SEARCH COMMITTEE */
 		$txt = '<br><h4>' . msg('find_a_term') . '</h4>';
 		$txt .= $this -> load -> view('committee/search', null, true);
+		$data['title']  = '';
 		$data['content'] = $txt;
 		$this -> load -> view('content', $data);
 
@@ -222,25 +219,25 @@ class main extends CI_Controller {
 
 		switch($status) {
 			case 'A' :
-				$sx = $this -> submits -> show_protocols($status);
+				$sx = $this -> ceps -> show_protocols($status);
 				break;
 			case 'B' :
-				$sx = $this -> submits -> show_protocols($status);
+				$sx = $this -> ceps -> show_protocols($status);
 				break;
 			case 'C' :
-				$sx = $this -> submits -> show_protocols($status);
+				$sx = $this -> ceps -> show_protocols($status);
 				break;
 			case 'D' :
-				$sx = $this -> submits -> show_protocols($status);
+				$sx = $this -> ceps -> show_protocols($status);
 				break;
 			case 'E' :
-				$sx = $this -> submits -> show_protocols($status);
+				$sx = $this -> ceps -> show_protocols($status);
 				break;
 			case 'H' :
 				$sx = $this -> ceps -> show_protocols($status);
 				break;
 			case 'P' :
-				$sx = $this -> submits -> show_protocols($status);
+				$sx = $this -> ceps -> show_protocols($status);
 				break;
 			default :
 				$sx = '';
@@ -280,31 +277,41 @@ class main extends CI_Controller {
 		}
 
 		$data = $this -> ceps -> le($id);
+		/* PROTOCOL NOT FOUND */
 		if (count($data) < 10) {
 			$this -> load -> view('errors/protocol_not_found', null);
 			$this -> foot();
 			return ('');
 		}
 
+		/* READ STATUS */
 		$status = $data['cep_status'];
+		$data = $this -> ceps -> le($id);
 
-		$data = $this -> submits -> le($id);
-
+		/* SHOW TITLE */
 		$data['title'] = '';
-		$data['content'] = $this -> load -> view('submit/view', $data, true);
+		$data['content'] = $this -> load -> view('protocol/view', $data, true);
+		$data['fluid'] = 1;
+		$data['bg'] = 'bg1 top20 bottom20';
 		$this -> load -> view('content', $data);
+		
+		/* SHOW FILES */
+		$data['title'] = '';
+		$data['content'] = $this -> load -> view('protocol/files', $data, true);
+		$data['fluid'] = 0;
+		$data['bg'] = '';
+		$this -> load -> view('content', $data);		
 
-		$data['content'] = '<h3>' . msg('files') . '</h3>' . cr();
-		$data['content'] .= $this -> geds -> file_list($id);
-		$this -> load -> view('content', $data);
-
+		/* SHOW MESSAGES */
 		$data['content'] = '';
 		$data['content'] .= $this -> messages -> show_messages($id);
 		$data['content'] .= $this -> historics -> show_historic($id);
 
 		$data['content'] .= $this -> messages -> show_messages_list($id);
 		$data['content'] .= $this -> historics -> show_historic_list($id);
-
+		
+		$data['fluid'] = 0;
+		$data['bg'] = 'bg2 top20 bottom20';
 		$this -> load -> view('content', $data);
 
 		/* Validate Documents */

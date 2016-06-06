@@ -84,10 +84,10 @@ if (perfil("#ADM")) {
 		}
 
 		if (($admin == 1) and (strlen($user) > 0)) {
-			echo '<li class="navbar-nav-item"><a href="' . base_url('index.php/admin') . '">' . msg("menu_admin") . '</a></li>' . cr();
+			echo '		<li class="navbar-nav-item"><a href="' . base_url('index.php/admin') . '">' . msg("menu_admin") . '</a></li>' . cr();
 		}
  ?>
-      </ul>
+    </ul>
 
    	<?php if (strlen($user) > 0) { ?>
       <ul class="nav navbar-nav navbar-right">
@@ -104,5 +104,7 @@ if (perfil("#ADM")) {
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+
+<!-------------------------------------------- end header ----------------->
  
 <div style="margin-bottom: 10px;"></div>

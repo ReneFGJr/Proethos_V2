@@ -7,12 +7,12 @@
 <link rel="shortcut icon" type="image/x-icon" href="https://cip.pucpr.br/favicon.ico" />
 <link rel="stylesheet" href="<?php echo base_url('css/bootstrap.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/jquery-ui.min.css');?>">
-<link rel="stylesheet" href="<?php echo base_url('css/style.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style_form.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style_font-awesome.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style_table.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/font_roboto.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/google_css.css');?>">
+<link rel="stylesheet" href="<?php echo base_url('css/style.css');?>">
 
 <?php
 		/* ESTILOS CSS 

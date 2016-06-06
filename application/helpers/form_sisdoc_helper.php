@@ -1591,9 +1591,12 @@ if (!function_exists('form_edit')) {
 				}
 				if ($vlr == '//') { $vlr = '';
 				}
-				if ($vlr == '') { $vlr = date("d/m/Y");
-				}
-				$row -> $fld = $vlr;
+				//if ($vlr == '') { $vlr = date("d/m/Y");
+				//}
+				if (strlen($fld) > 0)
+					{
+						$row -> $fld = $vlr;
+					}
 			}
 			if (substr($tp, 0, 2) == '$N') {
 				$fld = trim($cp[$r][1]);
@@ -2052,9 +2055,12 @@ if (!function_exists('form_edit')) {
 				for ($r = 0; $r < count($param); $r++) {
 					if (count(trim($param[$r])) > 0) {
 						$nterm = splitx(':', $param[$r] . ':');
-						$key = $nterm[0];
-						$valor = $nterm[1];
-						$options[$key] = $valor;
+						if (isset($nterm[0]))
+							{
+							$key = $nterm[0];
+							$valor = $nterm[1];
+							$options[$key] = $valor;
+							}
 					}
 				}
 

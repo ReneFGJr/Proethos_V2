@@ -9,140 +9,111 @@ class projects extends CI_Model {
 		array_push($cp, array('$R 1:' . msg('yes') . '&0:' . msg('no'), 'cep_clinic', msg('q_clinic_study'), True, True));
 		array_push($cp, array('$T80:5', 'cep_titulo', msg('title_main'), True, True));
 		array_push($cp, array('$T80:5', 'cep_titulo_public', msg('title_public'), True, True));
-		array_push($cp, array('$S50', 'cep_acronym', msg('title_acronym'), True, True));
+		array_push($cp, array('$S50', 'cep_acronym', msg('title_acronym'), False, True));
 		array_push($cp, array('$B8', '', msg('save_next'), False, True));
+		return ($cp);
+	}
+
+	function records($cp, $pag, $type, $id=0) {
+		$sql = "select * from cep_submit_manuscrito_field 
+					where sub_projeto_tipo = '$type' 
+							and sub_pag = $pag
+							and sub_ativo = 1
+				order by sub_pos, sub_ordem ";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+		for ($r = 0; $r < count($rlt); $r++) {
+			$line = $rlt[$r];
+			$tipo = $line['sub_field'];
+
+			$vapt = msg($line['sub_descricao']);
+			/* TEAM */
+			//echo '<br>'.$tipo;
+			switch ($tipo) {
+				case '$TEAM' :
+					/* team */
+					$team = $this -> teams -> show_team($id);
+					$team .= $this -> teams -> team_new_member($id);
+					array_push($cp, array('$M', '', $team, False, True));
+					break;
+				case '$COUNTRY':
+					/* team */
+					$team = $this -> teams -> show_team($id);
+					$team .= $this -> teams -> team_new_member($id);
+					array_push($cp, array('$M', '', $team, False, True));
+					break;
+				case '$CRONO':
+					break;
+				case '$BUDGET':
+					break;
+				case '$REGISTER_S':
+					break;
+				case '$REGISTER_P':
+					break;
+				case '$FILE':
+					break;					
+				default :
+					array_push($cp, array($tipo, '', $vapt, $line['sub_obrigatorio'], True));
+					break;
+			}
+
+		}
 		return ($cp);
 	}
 
 	function cp_02($id = '') {
 		$cp = array();
 
-		/* team */
-		$team = $this -> teams -> show_team($id);
-		$team .= $this -> teams -> team_new_member($id);
-
 		array_push($cp, array('$H8', 'id_cep', '', False, True));
-		array_push($cp, array('$M', '', $team, False, True));
-
-		array_push($cp, array('$A3', '', msg('abstract_field'), False, True));
-		array_push($cp, array('$T80:5', 'cep_fld_001', msg('abstract'), False, True));
-		array_push($cp, array('$S100', 'cep_fld_002', msg('keywords'), False, True));
-
-		array_push($cp, array('$A3', '', msg('introduction'), False, True));
-		array_push($cp, array('$T80:5', 'cep_fld_003', msg('introduction'), False, True));
-		array_push($cp, array('$T80:3', 'cep_fld_004', msg('justsificativa'), False, True));
-		array_push($cp, array('$T80:3', 'cep_fld_005', msg('Objectives'), False, True));
-
-		array_push($cp, array('$B8', '', msg('save_next'), False, True));
+		$pag = 2;
+		$type = '00001';
+		$cp = $this -> records($cp, $pag, $type, $id);
+		//array_push($cp, array('$B8', '', msg('save_next'), False, True));
 		return ($cp);
 	}
 
 	function cp_03($id = '') {
 		$cp = array();
 
-		/* country */
-		$country = $this -> teams -> show_team($id);
-		$country .= $this -> teams -> team_new_member($id);
-
 		array_push($cp, array('$H8', 'id_cep', '', False, True));
-
-		array_push($cp, array('$A3', '', msg('general_description'), False, True));
-		array_push($cp, array('$T80:5', 'cep_fld_011', msg('design study'), True, True));
-
-		array_push($cp, array('$A3', 'cep_fld_012', msg('sample'), False, True));
-
-		$op = '#men:' . msg('men');
-		$op .= '&#women:' . msg('women');
-		$op .= '&#both:' . msg('both');
-		$op .= '&#not_applicable:' . msg('not_applicable');
-
-		array_push($cp, array('$O ' . $op, 'cep_fld_013', msg('gender'), True, True));
-
-		//array_push($cp,array('$N8','cep_target_size',msg('target_sample_size'),True,True));
-		array_push($cp, array('$S8', 'cep_fld_014', msg('target_sample_size'), True, True));
-
-		array_push($cp, array('$[0-120]', 'cep_fld_015', msg('minimum age'), True, True));
-		array_push($cp, array('$[0-120]', 'cep_fld_016', msg('maximum age'), True, True));
-
-		array_push($cp, array('$T80:3', 'cep_fld_017', msg('key_inclusion'), True, True));
-		array_push($cp, array('$T80:3', 'cep_fld_018', msg('key_exclusion'), True, True));
-
-		array_push($cp, array('$D8', 'cep_fld_019', msg('Date of enrollment of first participant'), True, True));
-
-		array_push($cp, array('$A3', '', msg('countries_recruitment'), False, True));
-		array_push($cp, array('$M', '', $country, False, True));
-
-		array_push($cp, array('$A3', '', msg('intervention'), False, True));
-		array_push($cp, array('$T80:6', 'cep_fld_020', msg('intervention_type'), True, True));
-
-		array_push($cp, array('$B8', '', msg('save_next'), False, True));
-
+		$pag = 3;
+		$type = '00001';
+		$cp = $this -> records($cp, $pag, $type, $id);
+		//array_push($cp, array('$B8', '', msg('save_next'), False, True));
 		return ($cp);
 	}
 
 	function cp_04($id = '') {
 		$cp = array();
 
-		/* country */
-		$budget = $this -> teams -> show_team($id);
-		$budget .= $this -> teams -> team_new_member($id);
-
 		array_push($cp, array('$H8', 'id_cep', '', False, True));
-
-		array_push($cp, array('$A3', '', msg('BUDGET'), False, True));
-		array_push($cp, array('$M', '', $budget, False, True));
-
-		array_push($cp, array('$T80:3', 'cep_fld_005', msg('source_monetary'), True, True));
-		array_push($cp, array('$T80:3', 'cep_fld_005', msg('primary_sponsor'), True, True));
-		array_push($cp, array('$T80:3', 'cep_fld_005', msg('secondary_sponsor'), True, True));
-
-		array_push($cp, array('$A3', '', msg('crono'), False, True));
-		array_push($cp, array('$M', '', $budget, False, True));
-
-		array_push($cp, array('$B8', '', msg('save_next'), False, True));
-
+		$pag = 4;
+		$type = '00001';
+		$cp = $this -> records($cp, $pag, $type, $id);
+		//array_push($cp, array('$B8', '', msg('save_next'), False, True));
 		return ($cp);
 	}
 
 	function cp_05($id = '') {
 		$cp = array();
 
-		/* country */
-		$budget = $this -> teams -> show_team($id);
-		$budget .= $this -> teams -> team_new_member($id);
-
 		array_push($cp, array('$H8', 'id_cep', '', False, True));
-
-		array_push($cp, array('$A3', '', msg('contacts'), False, True));
-		array_push($cp, array('$T80:3', 'cep_fld_005', msg('scientific_contact'), True, True));
-
-		array_push($cp, array('$A3', '', msg('local_ethical_approval'), False, True));
-		array_push($cp, array('$O 1:' . msg("#yes") . '&0:' . msg('#no'), 'cep_fld_005', msg('local_ethical_approval'), True, True));
-		array_push($cp, array('$M', '', msg('local_ethical'), False, True));
-
-		array_push($cp, array('$A3', '', msg('references'), False, True));
-		array_push($cp, array('$T80:15', '', msg('reference'), False, True));
-
-		array_push($cp, array('$B8', '', msg('save_next'), False, True));
-
+		$pag = 5;
+		$type = '00001';
+		$cp = $this -> records($cp, $pag, $type, $id);
+		//array_push($cp, array('$B8', '', msg('save_next'), False, True));
 		return ($cp);
 	}
 
 	function cp_06($id = '') {
 		$cp = array();
 
-		/* country */
-		$file = $this -> geds -> file_list($id);
-		$file .= $this -> teams -> team_new_member($id);
-
 		array_push($cp, array('$H8', 'id_cep', '', False, True));
-
-		array_push($cp, array('$A3', '', msg('contacts'), False, True));
-		array_push($cp, array('$M', '', $file, False, True));
-
-		array_push($cp, array('$B8', '', msg('save_next'), False, True));
+		$pag = 6;
+		$type = '00001';
+		$cp = $this -> records($cp, $pag, $type, $id);
+		//array_push($cp, array('$B8', '', msg('save_next'), False, True));
 		return ($cp);
-
 	}
 
 	function cp_07($id = '') {
@@ -186,7 +157,6 @@ class projects extends CI_Model {
 		$this -> load -> model('submits');
 		$this -> load -> model('messages');
 		$this -> load -> model('historics');
-		
 
 		/* Insert Historic */
 		$data = array('proto' => $id, 'comment' => get("comment"), 'cod' => '001', 'caae' => '');

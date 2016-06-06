@@ -72,7 +72,7 @@ class ceps extends CI_Model {
 		$link[7] = '<a href="' . base_url('index.php/main/protocols/D') . '" class="link lt8">';
 
 		$sx = '<table width="100%">';
-		$sx .= '<tr align="center" class="lt2">';
+		$sx .= '<tr align="center" class="lt1 font">';
 		$sx .= '<td>&nbsp</td>';
 		for ($r = 0; $r < $size; $r++) {
 			$sx .= '<td width="' . $sz . '%">' . msg($fld[$r]) . '</td>';
@@ -99,7 +99,13 @@ class ceps extends CI_Model {
 		$sql = "select * from " . $this -> tabela . " WHERE cep_pesquisador = '$id' ";
 		$rlt = $this -> db -> query($sql);
 		$rlt = $rlt -> result_array();
-		$sx = '';
+		$sx = '<table class="table" width="100%">';
+		$sx .= '<tr style="font-size: 12px;">
+    				<th width="10%">'.msg("caae").'</th>
+    				<th width="60%">'.msg("protocol_title").'</th>
+    				<th width="10%">'.msg("last_update").'</th>
+    				<th width="20%">'.msg("status").'</th>
+    			</tr>';	
 		for ($r = 0; $r < count($rlt); $r++) {
 			$line = $rlt[$r];
 			$cep_status = $line['cep_status'];
@@ -129,6 +135,7 @@ class ceps extends CI_Model {
 			$sx .= '<td>' . $linke . $btn . '</a>' . '</td>';
 			$sx .= '</tr>';
 		}
+		$sx .= '</table>';
 		return ($sx);
 	}
 

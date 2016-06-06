@@ -40,12 +40,6 @@ class submit extends CI_Controller {
 
 		$this -> load -> view('header/header', $data);
 		$this -> load -> view('header/cab', $data);
-		if ($full == 1) {
-			$this -> load -> view('header/content_open_full', null);
-		} else {
-			$this -> load -> view('header/content_open', null);
-		}
-
 	}
 
 	function index() {
@@ -97,6 +91,12 @@ class submit extends CI_Controller {
 
 		/* Leitura */
 		$pj = $this -> submits -> le($id);
+		
+		if (count($pj) == 0)
+			{
+				redirect(base_url('index.php/main'));
+				return('');
+			}
 		if ($pj['cep_status'] != '@') {
 			$pj['title'] = '';
 			$pj['content'] = $this -> load -> view('submit/view', $pj, true);
@@ -115,7 +115,7 @@ class submit extends CI_Controller {
 		$this -> load -> view('submit/header_project', $data);
 
 		/* Mount screen */
-		$data['title'] = msg('submit_process');
+		
 
 		$form = new form;
 		$form -> id = $id;
@@ -153,6 +153,7 @@ class submit extends CI_Controller {
 		}
 
 		$tabela = $this -> projects -> tabela;
+		$data['title'] = msg('submit_process');
 		$data['content'] = $form -> editar($cp, $tabela);
 
 		/* Saved */

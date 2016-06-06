@@ -1,3 +1,4 @@
+<div class="container bg2">
 <ol class="breadcrumb">
 	<?php 
 	foreach ($menus as $item => $link) {
@@ -5,3 +6,4 @@
 	}
 	?>
 </ol>
+</div>

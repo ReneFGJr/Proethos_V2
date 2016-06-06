@@ -32,11 +32,6 @@ class publicc extends CI_Controller {
 
 		$this -> load -> view('header/header', $data);
 		$this -> load -> view('header/cab', $data);
-		if ($full == 1) {
-			$this -> load -> view('header/content_open_full', null);
-		} else {
-			$this -> load -> view('header/content_open', null);
-		}
 	}
 
 	function index() {
