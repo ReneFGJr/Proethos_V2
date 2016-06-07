@@ -13,7 +13,7 @@ class messages extends CI_Model {
 	var $testmode_email = 'renefgj@gmail.com';
 
 	function __construct() {
-		global $email_from, $email_from_name, $email_smtp, $email_pass, $email_user, $email_auth, $email_debug, $email_replay, $email_sign;
+		global $email_from, $email_from_name, $email_port, $email_smtp, $email_pass, $email_user, $email_auth, $email_debug, $email_replay, $email_sign;
 				
 		$sql = "select * from _committee limit 1";
 		$rlt = $this -> db -> query($sql);
@@ -33,6 +33,7 @@ class messages extends CI_Model {
 			$email_pass  =  $line['cm_admin_email_pass'];
 			$email_user  = $line['cm_admin_email'];
 			$email_auth  =  $line['cm_admin_email_tipo'];
+			$email_port  =  $line['cm_admin_email_port'];
 			$email_debug  = True;
 			$email_repla = $line['cm_email_replay'];
 			

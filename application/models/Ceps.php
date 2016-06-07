@@ -118,12 +118,12 @@ class ceps extends CI_Model {
 					$btn = '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>';
 					break;
 				case '!' :
-					$linke = '<a href="' . base_url('index.php/main/project/' . $line['id_cep'] . '/' . checkpost_link($line['id_cep'])) . '/1">';
+					$linke = '<a href="' . base_url('index.php/main/protocol/' . $line['id_cep'] . '/' . checkpost_link($line['id_cep'])) . '/1">';
 					$btn = '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>';
 					$class = ' style="background-color: #FFE0E0" ';
 					break;
 				default :
-					$linke = '<a href="' . base_url('index.php/main/project/' . $line['id_cep'] . '/' . checkpost_link($line['id_cep'])) . '/1">';
+					$linke = '<a href="' . base_url('index.php/main/protocol/' . $line['id_cep'] . '/' . checkpost_link($line['id_cep'])) . '/1">';
 					$btn = '<span class="glyphicon glyphicon-search" aria-hidden="true"></span>';
 					break;
 			}

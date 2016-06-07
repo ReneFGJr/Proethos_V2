@@ -64,6 +64,8 @@ class admin extends CI_Controller {
 	}
 
 	function email_test() {
+		global $email_debug;
+		$this->load->model('committees');
 		$this -> cab();
 
 		$form = new form;
@@ -73,17 +75,27 @@ class admin extends CI_Controller {
 		array_push($cp, array('$H8', '', '', False, True));
 		array_push($cp, array('$S50', '', msg('send_to'), True, True));
 		array_push($cp, array('$B8', '', msg('send_to'), False, True));
+		
+		array_push($cp, array('$M8', '', $this->committees->email_data(), False, True));
+		
 		$data['title'] = msg('email_test');
 		$data['content'] = $form -> editar($cp, '');
-		$this -> load -> view('content', $data);
 
 		if ($form -> saved > 0) {
 			$this -> load -> model("messages");
 			$to = get("dd1");
 			$subject = msg('email_teste');
 			$content = msg('email_teste');
-			$ok = sendmail($to, $subject, $content);
-			$this -> load -> view('successful', null);
+			$email_debug = true;
+			$data['content'] = sendmail($to, $subject, $content);
+			$this->load->view('content',$data);
+			//$data['return'] = base_url('index.php/admin/email_test');
+			$this -> load -> view('successful', $data);
+			$email_debug = false;
+			
+			$this -> load -> view('content', $data);
+		} else {
+			$this -> load -> view('content', $data);
 		}
 	}
 
@@ -124,7 +136,8 @@ class admin extends CI_Controller {
 		$data['content'] = $form -> editar($cp, $this -> committees -> tabela);
 
 		if ($form -> saved > 0) {
-			$this -> load -> view('successful', null);
+			$data['return'] = base_url('index.php/admin');
+			$this -> load -> view('successful', $data);
 		} else {
 			$this -> load -> view('content', $data);
 		}
@@ -337,6 +350,68 @@ class admin extends CI_Controller {
 		$data['content'] = $this->fields->row_records($typec,$pag);
 		$this->load->view('content',$data);		
 			
-		}		
+		}	
+	function ghost()
+		{
+		$this -> load -> model('users');
+		$secu = 1;
+		$full = 0;
+		$this -> cab($secu, $full);
+		
+		if (!(perfil("#ADM")))
+			{
+				redirect(base_url('index.php/main'));
+			}
+		
+		$form = new form;
+		$form->edit = false;
+		$form->novo = false;
+		$form->see = true;
+		$form->row_view = base_url('index.php/admin/user_ghost');
+		$form->row = base_url('index.php/admin/ghost');
+		$form->tabela = 'usuario';
+		$this->users->row($form);
+		$data['content'] = row($form);
+		$data['title'] = msg('ghost');
+		$this->load->view('content',$data);
+		
+		$this -> load -> view("header/content_close", null);
+		$this -> load -> view("header/footer", null);			
+		}	
+	function user_ghost($id=0,$chk='')
+		{
+			$chk2 = checkpost_link($id);
+			if ($chk2 != $chk) {
+				redirect(base_url('index.php/main'));
+			}
+
+			$this->load->model("users");
+			$this->load->model("securities");
+			
+			$data = $this->users->le($id);
+			$data['ghost'] = $_SESSION['id'];
+			$data['ghost_name'] = $_SESSION['name'];
+			$this->securities->security_set($data);
+			
+			redirect(base_url('index.php/main'));				
+		}
+	function ghost_exit()
+		{
+			if (isset($_SESSION['ghost']))
+				{
+				$id_ghost = $_SESSION['ghost'];
+				$this->load->model("users");
+				$this->load->model("securities");
+			
+				$data = $this->users->le($id_ghost);
+				if (count($data) > 0)
+					{
+						$data['ghost'] = 0;
+						$data['ghost_name'] = '';					
+						$this->securities->security_set($data);
+					}
+				}
+			redirect(base_url('index.php/main'));			
+		}
 }
 ?>

@@ -22,7 +22,10 @@ $email_adm = '';
 require_once ("libs/email/PHPMailerAutoload.php");
 
 function sendmail($para, $titulo, $texto) {
-	global $email_from, $email_from_name, $email_smtp, $email_pass, $email_user, $email_auth, $email_debug, $email_replay, $email_sign;
+	global $email_from, $email_from_name, $email_port, $email_smtp, $email_pass, $email_user, $email_auth, $email_debug, $email_replay, $email_sign;
+	
+	
+	
 	if (strlen($email_from) == 0) {
 		echo '<H1>Erro #120#</h1>';
 		echo '<PRE>';
@@ -43,6 +46,11 @@ function sendmail($para, $titulo, $texto) {
 		echo '</pre>';
 		exit ;
 	}
+	$sx = '';
+	if ($email_debug == '1')
+		{
+			$sx = '<tt>'.date("d/m/Y H:i:s").' Debug Mode: '.$email_auth;
+		}
 	switch ($email_auth) {
 		case 'OFF' :
 			return(msg('offline_mode'));
@@ -60,6 +68,7 @@ function sendmail($para, $titulo, $texto) {
 			$mail -> email_user = $email_user;
 			$mail -> email_pass = $email_pass;
 			$mail -> email_smtp = $email_smtp;
+			$mail -> email_port = $email_port;
 
 			$mail -> debug = round($email_debug);
 
@@ -80,6 +89,7 @@ function sendmail($para, $titulo, $texto) {
 			$mail -> email_user = $email_user;
 			$mail -> email_pass = $email_pass;
 			$mail -> email_smtp = $email_smtp;
+			$mail -> email_port = $email_port;
 
 			$mail -> debug = round($email_debug);
 			
@@ -87,6 +97,7 @@ function sendmail($para, $titulo, $texto) {
 			$mail -> method_1_mail();
 			break;
 	}
+	return($sx);
 }
 
 function checaemail($chemail) {
@@ -175,6 +186,7 @@ class email {
 		$smtp = $this -> email_smtp;
 		$user = $this -> email_user;
 		$pass = $this -> email_pass;
+		$port = $this -> email_port;
 		$from = $this -> email;
 		$from_name = $this -> email_name;
 		$replay = $this -> email_replay;
@@ -189,7 +201,7 @@ class email {
 		$mail -> SMTPDebug = 0;
 		$mail -> Debugoutput = 'html';
 		$mail -> Host = $smtp;
-		$mail -> Port = 25;
+		$mail -> Port = $port;
 		$mail -> SMTPAuth = true;
 		$mail -> Username = $user;
 		$mail -> Password = $pass;
@@ -215,7 +227,6 @@ class email {
 		//$mail -> AltBody = $body; //
 		//Attach an image file
 		//$mail->addAttachment('images/phpmailer_mini.png');
-		
 		//send the message, check for errors
 		if (!$mail -> send()) {
 			return ("Mailer Error: " . $mail -> ErrorInfo);

@@ -1037,7 +1037,7 @@ function npag($obj, $blank = 1, $tot = 10, $offset = 20) {
 		$pagi = 1;
 	}
 
-	$sx = '<table class="tabela01 border1 lt2 bg_lgrey" border=0 width="100%">';
+	$sx = '<table class="table lt2" width="100%">';
 	$sx .= '<tr valign="middle"><td width="50%">';
 	$sx .= '<ul id="npag" class="npag">';
 	if ($pagi > 1) {
@@ -1393,7 +1393,7 @@ if (!function_exists('form_edit')) {
 		}
 
 		/* Tela completa */
-		$tela = '<table width="100%" id="row">';
+		$tela = '<table width="100%" class="table" id="row">';
 		$tela .= $sh;
 		$tela .= $data;
 		$tela .= '<tr><th colspan=10 align="left">Total ' . $total . ' de registros' . '</th></tr>';

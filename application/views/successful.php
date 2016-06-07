@@ -1,3 +1,4 @@
+<div class="container">
 <div class="alert alert-success" role="alert"><?php echo msg('success');?></div>
 
 <?php
@@ -14,3 +15,4 @@ if (isset($return))
 	';
 	}
 ?>
+</div>

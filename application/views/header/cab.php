@@ -96,6 +96,12 @@ if (perfil("#ADM")) {
           <ul class="dropdown-menu">
             <li><a href="<?php echo base_url('index.php/main/myaccount'); ?>"><?php echo msg('my_account'); ?></a></li>
             <li role="separator" class="divider"></li>
+            <?php
+            if ((isset($_SESSION['ghost'])) and ($_SESSION['ghost'] > 0))
+				{
+					echo '<li><a href="'.base_url('index.php/admin/ghost_exit').'">'.msg('return_to_admin').'</a></li>';					
+				}
+            ?>
             <li><a href="<?php echo base_url('index.php/main/logout'); ?>"><?php echo msg('logout'); ?></a></li>
           </ul>
         </li>

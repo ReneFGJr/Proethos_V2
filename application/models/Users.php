@@ -21,8 +21,8 @@ class users extends CI_model {
 
 	function row($form) {
 		global $tabela, $http_edit, $http_edit_para, $cdf, $cdm, $masc, $offset, $order;
-		$form -> fd = array('id_us', 'us_login', 'us_nome', 'us_codigo');
-		$form -> lb = array('ID', 'login', 'nome', 'codigo');
+		$form -> fd = array('id_us', 'us_nome', 'us_email');
+		$form -> lb = array('ID', 'nome', 'codigo');
 		$form -> mk = array('', '', '', '', '', '', '', '', '');
 
 		return ($form);
@@ -127,7 +127,7 @@ class users extends CI_model {
 		array_push($cp, array('$H20', 'us_login', msg('login'), False, True));
 		array_push($cp, array('$S100', 'us_email', msg('email'), True, True));
 		array_push($cp, array('$S100', 'us_email_alt', msg('email_alt'), False, True));
-		array_push($cp, array('$P20', 'us_senha', msg('senha'), True, True));
+		//array_push($cp, array('$P20', 'us_senha', msg('senha'), True, True));
 		array_push($cp, array('$T60:5', 'us_endereco', msg('address'), False, True));
 		array_push($cp, array('$S100', 'us_instituition', msg('institution'), True, True));
 

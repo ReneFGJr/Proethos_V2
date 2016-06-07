@@ -27,7 +27,7 @@ class committees extends CI_model {
 	var $tabela_perfil = 'usuario_perfil';
 	var $tabela_perfil_ativo = 'usuario_perfis_ativo';
 	var $tabela_usuario = 'usuario';
-	
+
 	function cp() {
 		global $dd;
 		$cp = array();
@@ -79,6 +79,7 @@ class committees extends CI_model {
 
 		return ($cp);
 	}
+
 	function cp_email() {
 		global $dd;
 		$cp = array();
@@ -97,6 +98,7 @@ class committees extends CI_model {
 		array_push($cp, array('$S100', 'cm_email_replay', msg("admin_email_replay"), False, True));
 		array_push($cp, array('$O ' . $tp, 'cm_admin_email_tipo', msg("admin_email_tipo"), True, True));
 		array_push($cp, array('$S100', 'cm_admin_email_smtp', msg("admin_email_smtp"), True, True));
+		array_push($cp, array('$O 25:25&26:26&465:465&587:587', 'cm_admin_email_port', msg("admin_email_port"), False, True));
 		array_push($cp, array('$P20', 'cm_admin_email_pass', msg("admin_email_password"), False, True));
 		array_push($cp, array('$}', '', '', False, True));
 
@@ -158,6 +160,30 @@ class committees extends CI_model {
 			$sx .= '</tr>';
 		}
 		$sx .= '</table>';
+		return ($sx);
+	}
+
+	function email_data() {
+		$sx = '';
+		if (perfil("#ADM")) {
+			$sql = "select * from _committee limit 1";
+			$rlt = $this -> db -> query($sql);
+			$rlt = $rlt -> result_array();
+
+			if (count($rlt) > 0) {
+				$line = $rlt[0];
+				$sx = '<table class="table lt2" width="100%">';
+				$sx .= '<tr><th width="20%">' . msg('information') . '</th><th width="80%">' . msg('data') . '</th></tr>' . cr();
+
+				$sx .= '<tr><td align="right" class="lt0">Mail Method</td><td>' . $line['cm_admin_email_tipo'] . '</td></tr>';
+				$sx .= '<tr><td align="right" class="lt0">SMTP Server</td><td>' . $line['cm_admin_email_smtp'] . '</td></tr>';
+				$sx .= '<tr><td align="right" class="lt0">SMTP Port</td><td>' . $line['cm_admin_email_port'] . '</td></tr>';
+				$sx .= '<tr><td align="right" class="lt0">SMTP User</td><td>' . $line['cm_admin_email'] . '</td></tr>';
+				$sx .= '<tr><td align="right" class="lt0">SMTP Password</td><td>' . $line['cm_admin_email_pass'] . '</td></tr>';
+				$sx .= '<tr><td align="right" class="lt0">SMTP Replay</td><td>' . $line['cm_email_replay'] . '</td></tr>';
+				$sx .= '</table>';
+			}
+		}
 		return ($sx);
 	}
 

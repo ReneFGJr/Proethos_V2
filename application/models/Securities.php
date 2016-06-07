@@ -50,8 +50,12 @@ class securities extends CI_model {
 	}
 
 	function security_set($rlt) {
+		if (!(isset($rlt['ghost']))) { $rlt['ghost'] = 0; }
+		if (!(isset($rlt['ghost_name']))) { $rlt['ghost_name'] = ''; }
 		$chk = md5($rlt['id_us'] . $rlt['us_nome'] . $rlt['us_cracha'] . date("Ymd"));
-		$sec = array('id' => $rlt['id_us'], 'name' => $rlt['us_nome'], 'badge' => $rlt['us_cracha'], 'instituition' => $rlt['us_instituition'], 'email' => $rlt['us_email'], 'perfil' => $rlt['us_perfil'], 'checksun' => $chk);
+		$sec = array('id' => $rlt['id_us'], 'name' => $rlt['us_nome'], 'badge' => $rlt['us_cracha'], 'instituition' => $rlt['us_instituition'], 'email' => $rlt['us_email'], 
+						'perfil' => $rlt['us_perfil'], 'checksun' => $chk, 
+					  	'ghost' => $rlt['ghost'], 'ghost_name' => $rlt['ghost_name']);
 		$this -> session -> set_userdata($sec);
 		return ('');
 	}

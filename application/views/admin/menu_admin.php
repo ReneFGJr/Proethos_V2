@@ -1,16 +1,19 @@
 <div class="row">
 	<div class="col-md-6">
-		<ul class="nav nav-pills">
+		<ul class="nav nav-pills2">
 			<li role="presentation" >
 				<a href="<?php echo base_url('index.php/admin/message_email'); ?>"><?php echo msg('message_email'); ?></a>
-			</li>			
+			</li>
+			<li role="presentation" >
+				<a href="<?php echo base_url('index.php/admin/ghost'); ?>"><?php echo msg('ghost'); ?></a>
+			</li>						
 			<li role="presentation" class="disabled">
 				<a href="#">Disabled link</a>
 			</li>
 		</ul>
 	</div>
 	<div class="col-md-6">
-		<ul>
+		<ul class="nav">
 			<li>
 				<a href="<?php echo base_url('index.php/admin/admin_submission/project'); ?>"><?php echo msg('admin_submission_field'); ?></a>
 			</li>
