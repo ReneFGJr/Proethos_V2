@@ -4,6 +4,20 @@ class users extends CI_model {
 	var $tabela_perfil = 'usuario_perfil';
 	var $tabela_perfil_ativo = 'usuario_perfis_ativo';
 
+	function le_email($email) {
+		$sql = "select * from " . $this -> tabela . " 
+				where us_email = '" . trim($email) . "' ";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+		if (count($rlt) > 0) {
+			$line = $rlt[0];
+			return ($line);
+		} else {
+			$line = array();
+			return ($line);
+		}
+	}
+
 	function le($id = 0, $cracha = 'xxx') {
 		$sql = "select * from " . $this -> tabela . " 
 				where id_us = " . round($id) . "
@@ -67,18 +81,16 @@ class users extends CI_model {
 	}
 
 	/* Check if is the new email */
-	function is_new_user($email)
-		{
-			$sql = "select * from usuario where us_email = '$email' ";
-			$rlt = $this->db->query($sql);
-			$rlt = $rlt->result_array();
-			if (count($rlt) == 0)
-				{
-					return(1);
-				} else {
-					return(0);
-				}
+	function is_new_user($email) {
+		$sql = "select * from usuario where us_email = '$email' ";
+		$rlt = $this -> db -> query($sql);
+		$rlt = $rlt -> result_array();
+		if (count($rlt) == 0) {
+			return (1);
+		} else {
+			return (0);
 		}
+	}
 
 	function cp_new_user() {
 		global $messa, $dd;
@@ -97,7 +109,6 @@ class users extends CI_model {
 		return ($cp);
 
 	}
-
 
 	function cp_myaccount() {
 		global $messa;

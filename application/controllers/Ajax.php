@@ -21,7 +21,7 @@ class ajax extends CI_controller {
 		$chk = get("check");
 		if (strlen($id) == 0) { $id = "78";
 		}
-		echo "========>" . $ac;
+
 		switch ($ac) {
 			/* Return to edit */
 			case '002' :
@@ -155,8 +155,15 @@ class ajax extends CI_controller {
 				$proto = get('proto');
 				$this->ceps->survey_answer($proto,$user_id,$answer);
 				break;
+			case 'team':
+				$this->load->model('teams');
+				$email = get("comment");
+				$proto = get("proto");
+				$data['content'] = $this->teams->insert_new_investigator($proto,$email);
+				$this->load->view('content',$data);
+				break;
 			default:
-				echo 'Not implemented';
+				echo $ac.' Not implemented';
 		}
 
 	}

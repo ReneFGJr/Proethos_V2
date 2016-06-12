@@ -32,8 +32,8 @@ class projects extends CI_Model {
 			switch ($tipo) {
 				case '$TEAM' :
 					/* team */
-					$team = $this -> teams -> show_team($id);
-					$team .= $this -> teams -> team_new_member($id);
+					$edit = 1;
+					$team = $this -> teams -> show_team($id,$edit);
 					array_push($cp, array('$M', '', $team, False, True));
 					break;
 				case '$COUNTRY':

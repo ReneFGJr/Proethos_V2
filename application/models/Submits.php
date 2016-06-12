@@ -63,6 +63,8 @@ class submits extends CI_Model {
 				$xsql = "select * from ".$this->tabela." where cep_tipo = '$tipo' and cep_pesquisador = '$ida' and cep_data = '$data' and cep_hora = '$hora' ";
 				$rlt = $this->db->query($xsql);
 				$rlt = $rlt->result_array();
+				
+				/* CRIA COORDANDOR DA EQUIPE */
 			}
 			$id = $line['id_cep'];
 		}
