@@ -1,7 +1,7 @@
 <?php
 class submits extends CI_Model {
 	var $tabela = 'cep_protocolos';
-	
+
 	function le($id=0)
 		{
 		$sql = "select * from " . $this -> tabela . "
@@ -37,7 +37,7 @@ class submits extends CI_Model {
 	function create_new_project($ida='',$tipo='')
 		{
 			$data = date("Ymd");
-			$hora = date("H:i:s");
+			$hora = date("H:i");
 			
 			/* valide */
 			$xsql = "select * from ".$this->tabela." where cep_tipo = '$tipo' and cep_pesquisador = '$ida' and cep_data = '$data' and cep_hora = '$hora' ";
@@ -60,12 +60,26 @@ class submits extends CI_Model {
 				$sql = "update ".$this->tabela." set cep_codigo = lpad(id_cep,7,0) where cep_codigo = '' ";
 				$rlt = $this->db->query($sql);
 				
-				$xsql = "select * from ".$this->tabela." where cep_tipo = '$tipo' and cep_pesquisador = '$ida' and cep_data = '$data' and cep_hora = '$hora' ";
+				$xsql = "select * from ".$this->tabela." 
+							WHERE cep_tipo = '$tipo' 
+								AND cep_pesquisador = '$ida' 
+								AND cep_data = '$data' 
+								AND cep_hora = '$hora' ";
+				echo $xsql;
 				$rlt = $this->db->query($xsql);
 				$rlt = $rlt->result_array();
-				
+							
 				/* CRIA COORDANDOR DA EQUIPE */
+				$line = $rlt[0];
+				$proto = trim($line['cep_codigo']);
+				$user = $_SESSION['badge'];
+				$sql = "insert into cep_team 
+						(ct_protocol,ct_author,ct_type,ct_data,ct_ativo) 
+					values
+						('$proto','$user','C','$data','1')";
+				$rlt = $this->db->query($sql);
 			}
+			$line = $rlt[0];
 			$id = $line['id_cep'];
 		}
 	function show_protocols($status = '') {

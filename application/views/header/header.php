@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="<?php echo base_url('css/font_roboto.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/google_css.css');?>">
 <link rel="stylesheet" href="<?php echo base_url('css/style.css');?>">
-
+<link rel="stylesheet" href="<?php echo base_url('css/form_sisdoc.css');?>">
 <?php
 		/* ESTILOS CSS 
 		 */

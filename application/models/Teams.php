@@ -1,19 +1,27 @@
 <?php
 class teams extends CI_Model
 	{
+	function remove_investigator($proto,$id)
+		{
+			$sql = "update cep_team
+						SET ct_ativo = 0
+					WHERE id_ct = ".$id;
+			$this->db->query($sql);
+			$sx = $this->show_team($proto,1);				
+			return($sx);						
+		}
 	function show_team($id=0,$edit=1,$erro='')
 		{
 			$proto = strzero($id,7);	
 			$sql = "select * from cep_team
 						INNER JOIN usuario ON us_codigo = ct_author
-					where ct_protocol = '$proto' 
+					where ct_protocol = '$proto' and ct_ativo = 1
 					order by ct_type, us_nome ";
 
 			$rlt = $this->db->query($sql);
 			$rlt = $rlt->result_array();
 			
-			$sx = '<div id="team">';
-			$sx .= '<table class="table lt2">';
+			$sx = '<table class="table lt2">';
 			//$sx .= '<tr><th colspan="6" class="lt3">'.msg('team').'</th></tr>'.cr();
 			$sx .= '<tr class="lt1">
 						<th width="2%">#</th>
@@ -32,8 +40,20 @@ class teams extends CI_Model
 					$sx .= '<td>'.$line['ct_type'].'</td>';
 					if ($line['ct_type'] != 'C')
 						{
-							$link = ' onclick="remove_team(\''.$line['id_ct'].'\',\''.checkpost_link($line['id_ct']).'\');" ';
-							$sx .= '<td>'.'<span class="glyphicon glyphicon-trash" aria-hidden="true" style="cursor: pointer;" '.$link.'></span>'.'</td>';
+							$title = msg('remove_investigador');
+							$content = $line['us_nome'];
+							$link = base_url('index.php/ajax/action/team_del/');
+							$idin = $line['id_ct'];
+							$check = checkpost_link($idin);
+							$proto = strzero($id,7);
+								
+							$link = ' onclick="remove_team(\''.$proto.'\',\''.$title.'\',\''.$content.'\',\''.$idin.'\',\''.$link.'\',\''.$check.'\');" ';
+							$sx .= '<td>';
+							//$sx .= '<button type="button" class="btn" data-toggle="modal" data-target="#myModal">';
+							$sx .= '<span class="glyphicon glyphicon-trash" aria-hidden="true" style="cursor: pointer;" '.$link.'></span>';
+							//$sx .= '</button>';
+							// $('#myModal').modal(options)
+							$sx .= '</td>';	
 						} else {
 							$sx .= '<td>&nbsp;</td>';
 						}
@@ -46,7 +66,6 @@ class teams extends CI_Model
 					$sx .= $this->team_new_member($id);
 					$sx .= $erro;
 				}
-			$sx .= '</div>';
 			return($sx);
 		}	
 		
@@ -84,9 +103,6 @@ class teams extends CI_Model
 			$sx .= '	</div> <!--- row ---->'.cr();			
 			/************************ ROW ****************************************************/
 			$sx .= '</div> <!-- team_form -->';
-			
-			$sx .= '<script language="JavaScript" type="text/javascript" src="'.base_url('js/action/team.js').'"></script>
-			';
 			return($sx);
 		}
 	function insert_new_investigator($proto,$email)

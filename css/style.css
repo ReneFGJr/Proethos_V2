@@ -8,24 +8,7 @@ body {
 	color: #333333;
 	font-weight: normal;
 }
-.standard {
-	margin: 0px;
-	padding: 0px;
-	background-color: #FFFFFF;
-	font-family: Helvetica, Tahoma, Arial, sans-serif;
-	font-size: 16px;
-	color: #333333;
-	font-weight: normal;
-}
-.standard a {
-	margin: 0px;
-	padding: 0px;
-	background-color: #FFFFFF;
-	font-family: Helvetica, Tahoma, Arial, sans-serif;
-	font-size: 16px;
-	color: #333333;
-	font-weight: normal;
-}
+
 .font {
 	font-family: "Yanone Kaffeesatz", Helvetica, Tahoma, Arial, sans-serif;
 }
@@ -36,14 +19,9 @@ body {
 h1, h2, h3, h4 ,h5 ,h6 { font-family: "Yanone Kaffeesatz", Helvetica, Tahoma, Arial, sans-serif; }
 .h1, .h2, .h3, .h4 ,.h5 ,.h6 { font-family: "Yanone Kaffeesatz", Helvetica, Tahoma, Arial, sans-serif; }
 
-.form_tabela2
-	{
-		font-family: "Yanone Kaffeesatz", Helvetica, Tahoma, Arial, sans-serif;
-	}
-
 /* Background */
 .bg1 {
-	background-color: #E7E7FF;
+	background-color: #e0e0ff;
 }
 .bg2 {
 	border-top: 1px solid #888888;
@@ -130,93 +108,17 @@ a.lt1 {
 	font-size: 46px;
 }
 
-/* Formulario */
-#form_search {
-	padding: 40px 0px 0px 0px;
-	width: 100%;
-	height: 100px;
-}
-.form_search_in {
-	font-size: 14px;
-	height: 40px;
-	width: 400px;
-}
-.form_search_bt {
-	font-size: 10px;
-	height: 40px;
-	padding: 5px 20px;
-}
-/* Photos - Fotografia */
-#photo {
-	border: 1px solid #333333;
-	padding: 10px;
-}
-/* Shadown */
-.shadown {
-	box-shadow: 5px 5px 5px #888888;
-}
-/* Margins */
-.m10r {
-	margin-right: 10px;
-}
-.m10b {
-	margin-bottom: 10px;
-}
-.bg_blue {
-	background-color: #000080;
-}
-.bg_blue_light {
-	background-color: #8080FF;
-	color: #ffffff;
-}
 /* Borders */
 .border1 {
-	border: 1px solid #cccccc;
+	border: 0px solid #cccccc;
 }
 .borderb1 {
-	border-bottom: 1px solid #cccccc;
+	border-bottom: 0px solid #cccccc;
 }
 .radius10 {
 	border-radius: 10px;
 }
-.box5 {
-	border: 1px solid #ececec;
-	border-radius: 5px;
-	padding: 5px 10px;
-	text-align: center;
-}
-.left-float {
-	float: left;
-}
 
-#header_submit ul {
-	padding: 0px;
-	margin: 0px;
-	background-color: #FFFFFF;
-	list-style: none;
-}
-#header_submit ul li {
-	display: inline;
-}
-#header_submit ul li a {
-	padding: 0px 0px;
-	padding-left: 10px;
-	display: inline-block;
-	/* visual do link */
-	background-color: #8080FF;
-	color: #ffffff;
-	text-decoration: none;
-}
-#header_submit ul li a:hover {
-	padding: 0px 0px;
-	padding-left: 10px;
-	display: inline-block;
-	/* visual do link */
-	background-color: #0000FF;
-	color: #ffffff;
-	text-decoration: none;
-	border-bottom: 3px solid #EDEDED;
-}
 
 .dropdown-menu {
 	font-size: 20px;

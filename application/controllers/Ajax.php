@@ -160,10 +160,62 @@ class ajax extends CI_controller {
 				$email = get("comment");
 				$proto = get("proto");
 				$data['content'] = $this->teams->insert_new_investigator($proto,$email);
-				$this->load->view('content',$data);
+				$this->load->view('display',$data);
 				break;
+			case 'team_del':
+				$this->load->model('teams');
+				$id = round(get("id"));
+				$proto = get("proto");
+				$data['content'] = $this->teams->remove_investigator($proto,$id);
+				$this->load->view('display',$data);
+				break;
+			case 'country':
+				$this->load->model('countries');
+				$size = round(get("size"));
+				$country = get("country");
+				$proto = get("proto");
+				$desc = get("comment");
+				if ($size > 0)
+					{
+						$data['content'] = $this->countries->insert($proto,$country,$size,$desc);		
+					} else {
+						$data['content'] = $this->countries->show($proto,1);
+					}
+				
+				$this->load->view('display',$data);
+				break;	
+			case 'country_del':
+				$this->load->model('countries');
+				$id = round(get("id"));
+				$proto = get("proto");
+				$data['content'] = $this->countries->remove($proto,$id);
+				$this->load->view('display',$data);
+				break;
+			case 'budget':
+				$this->load->model('budgets');
+				$size = round(get("size"));
+				$budget = get("budget");
+				$proto = get("proto");
+				$desc = get("comment");
+				print_r($_POST);
+				if ($size > 0)
+					{
+						$data['content'] = $this->budgets->insert($proto,$budget,$size,$desc);		
+					} else {
+						$data['content'] = $this->budgets->show($proto,1);
+					}
+				
+				$this->load->view('display',$data);
+				break;	
+			case 'budget_del':
+				$this->load->model('budgets');
+				$id = round(get("id"));
+				$proto = get("proto");
+				$data['content'] = $this->budgets->remove($proto,$id);
+				$this->load->view('display',$data);
+				break;										
 			default:
-				echo $ac.' Not implemented';
+				echo '<font color="red">'.$ac.' Not implemented'.'</font>';
 		}
 
 	}

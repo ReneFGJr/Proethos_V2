@@ -30,9 +30,6 @@ class submit extends CI_Controller {
 		/* Carrega classes adicionais */
 		$css = array();
 		$js = array();
-		array_push($css, 'bootstrap.css');
-		array_push($css, 'form_sisdoc.css');
-		array_push($js, 'bootstrap.js');
 
 		/* transfere para variavel do codeigniter */
 		$data['css'] = $css;
@@ -54,7 +51,12 @@ class submit extends CI_Controller {
 
 		if ($tot == 0) {
 			$id = $this -> submits -> create_new_project($ida, 'PRO');
-			redirect(base_url('index.php/submit/project_edit/' . $id . '/' . checkpost_link($id) . '/' . $pag));
+			$pag = 1;
+
+			$link = base_url('index.php/submit/project_edit/' . $id . '/' . checkpost_link($id) . '/' . $pag);
+			echo $link;
+			exit ;
+			redirect($link);
 		}
 
 		$pag = 0;
@@ -74,8 +76,11 @@ class submit extends CI_Controller {
 		$this -> load -> model('ceps');
 		$this -> load -> model('geds');
 		$this -> load -> model('teams');
+		$this -> load -> model('budgets');
 		$this -> load -> model('submits');
+		$this -> load -> model('countries');
 		$this -> load -> model('projects');
+		$this -> load -> model('primary_registration');
 		$page_link = 'submit/project_edit';
 		/* Page */
 		if ($pag <= 0) {
@@ -91,12 +96,11 @@ class submit extends CI_Controller {
 
 		/* Leitura */
 		$pj = $this -> submits -> le($id);
-		
-		if (count($pj) == 0)
-			{
-				redirect(base_url('index.php/main'));
-				return('');
-			}
+
+		if (count($pj) == 0) {
+			redirect(base_url('index.php/main'));
+			return ('');
+		}
 		if ($pj['cep_status'] != '@') {
 			$pj['title'] = '';
 			$pj['content'] = $this -> load -> view('submit/view', $pj, true);
@@ -111,17 +115,25 @@ class submit extends CI_Controller {
 		$data['chk'] = $chk;
 		$data['link'] = $page_link;
 		$data['max_menu'] = 7;
+		$proto = strzero($id, 7);
 		//$data['page_enable'] = 1;
+
 		$this -> load -> view('submit/header_project', $data);
 
+		/* Save Data */
+		if (strlen(get("acao")) > 0) {
+			$this -> projects -> save_protocol($proto, '00001', $pag);
+		}
+
 		/* Mount screen */
-		
 
 		$form = new form;
 		$form -> id = $id;
+		$tabela = '';
 
 		switch ($pag) {
 			case '1' :
+				$tabela = $this -> projects -> tabela;
 				$cp = $this -> projects -> cp_01($id);
 				break;
 			case '2' :
@@ -152,7 +164,6 @@ class submit extends CI_Controller {
 				break;
 		}
 
-		$tabela = $this -> projects -> tabela;
 		$data['title'] = msg('submit_process');
 		$data['content'] = $form -> editar($cp, $tabela);
 
@@ -176,22 +187,21 @@ class submit extends CI_Controller {
 		$this -> load -> model('messages');
 		$this -> load -> model('comments');
 		$this -> load -> model('historics');
-		
+		$this -> load -> model('primary_registration');
+
 		/* checks */
-		if ($chk != checkpost_link($id))
-			{
-				redirect(base_url('index.php/main'));
-			}
+		if ($chk != checkpost_link($id)) {
+			redirect(base_url('index.php/main'));
+		}
 
 		$secu = 1;
 		$full = 0;
 		$this -> cab($secu, $full);
 
 		$data = $this -> submits -> le($id);
-		if (count($data) < 10)
-			{
-				redirect('index.php');
-			}
+		if (count($data) < 10) {
+			redirect('index.php');
+		}
 		$data['title'] = '';
 		$data['content'] = $this -> load -> view('submit/view', $data, true);
 		$this -> load -> view('content', $data);
@@ -215,12 +225,12 @@ class submit extends CI_Controller {
 			$data['content'] = $this -> ceps -> validate_documments($id);
 			$this -> load -> view('content', $data);
 		}
-		
+
 		/* Atribute */
 		if ($data['cep_status'] == 'D') {
 			$data['content'] = $this -> ceps -> meeting_documments($id);
 			$this -> load -> view('content', $data);
-		}		
+		}
 
 		$this -> load -> view("header/content_close", null);
 		$this -> load -> view("header/footer", null);
